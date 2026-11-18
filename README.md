@@ -262,7 +262,7 @@ A **CDN** is a network of geographically distributed servers that caches and del
 
 
 ## Section 8: Stateless Web Tier
-![Uploading image.png…]()
+<img width="902" height="884" alt="image" src="https://github.com/user-attachments/assets/e1d76b17-aec9-4206-8458-08c3d95fe767" />
 
 
 A Stateless Web Tier is an architecture where web servers do not store user session data locally. Instead, session data is stored in a shared datastore such as Redis or a database.
@@ -284,6 +284,35 @@ A Stateless Web Tier is an architecture where web servers do not store user sess
 
 ### Key Point
 Stateless web servers make applications easier to scale because any server can handle a user's request.
+
+
+
+## Section 9: Multi-Data Center Setup
+![Uploading image.png…]()
+
+Multi-Data Center Setup means deploying an application across multiple geographical locations to improve availability and reduce latency.
+
+### Main Strategies
+
+1. **GeoDNS Routing:** Directs users to the nearest data center based on their geographical location.
+2. **Data Replication:** Synchronizes data across multiple data centers to keep data available and consistent.
+
+### Key Considerations
+
+1. **Traffic Redirection:** Use effective tools to route users to the correct data center.
+2. **Data Synchronization:** Replicate data across multiple data centers to maintain consistency.
+3. **Testing and Deployment:** Use automated tools to keep services consistent across all data centers.
+
+### Key Benefits
+
+- **High Availability:** If one data center fails, another can handle requests.
+- **Low Latency:** Users receive responses from nearby data centers.
+- **Reliability:** Data is available across multiple locations.
+
+### Key Difference
+
+- **Load Balancer:** Distributes traffic between multiple servers.
+- **GeoDNS:** Routes users between different geographical data centers.
 
 
 
