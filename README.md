@@ -171,5 +171,49 @@ Database Replication is the process of maintaining copies of a database across m
 
 
 
+## Section 6: Caching
+
+Caching is the process of storing frequently accessed data temporarily in memory to reduce database load and improve application performance.
+
+### How Caching Works
+1. The backend first checks the cache for requested data.
+2. If data is found (**Cache Hit**), it is returned directly from the cache.
+3. If data is not found (**Cache Miss**), the backend fetches it from the database.
+4. The fetched data is stored in the cache for future requests.
+
+### Cache vs Database
+- **Database:** Stores original and permanent application data.
+- **Cache:** Stores frequently accessed data temporarily in memory.
+- Cache is much faster than a traditional database.
+
+### Caching Considerations
+
+#### 1. Use Case
+- Best for data that is frequently read but rarely modified.
+
+#### 2. Expiration Policy (TTL)
+- Defines how long cached data remains in memory.
+- Expired data is automatically removed.
+
+#### 3. Consistency
+- Ensures cache and database contain updated data.
+- Inconsistency occurs when cached data is outdated.
+
+#### 4. Mitigating Failures
+- Multiple cache servers can reduce the risk of a Single Point of Failure (SPOF).
+
+#### 5. Eviction Policies
+- Remove data when the cache memory becomes full.
+- **LRU (Least Recently Used):** Removes the data that has not been accessed for the longest time.
+
+### Benefits
+- Reduces database load.
+- Improves response time.
+- Increases application performance.
+
+### Example
+Redis can be used as a caching layer in a MERN application to store frequently requested MongoDB data.
+
+
 
 
