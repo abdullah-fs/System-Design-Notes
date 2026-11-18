@@ -172,6 +172,8 @@ Database Replication is the process of maintaining copies of a database across m
 
 
 ## Section 6: Caching
+![Uploading image.png…]()
+
 
 Caching is the process of storing frequently accessed data temporarily in memory to reduce database load and improve application performance.
 
