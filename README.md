@@ -172,7 +172,7 @@ Database Replication is the process of maintaining copies of a database across m
 
 
 ## Section 6: Caching
-![Uploading image.png…]()
+<img width="1160" height="372" alt="image" src="https://github.com/user-attachments/assets/e5256de9-e05b-43d8-9371-df965c127e3c" />
 
 
 Caching is the process of storing frequently accessed data temporarily in memory to reduce database load and improve application performance.
@@ -215,6 +215,50 @@ Caching is the process of storing frequently accessed data temporarily in memory
 
 ### Example
 Redis can be used as a caching layer in a MERN application to store frequently requested MongoDB data.
+
+
+## Section 7: Content Delivery Network (CDN)
+![Uploading image.png…]()
+
+
+A **CDN** is a network of geographically distributed servers that caches and delivers static content (images, CSS, JavaScript) from locations closer to users.
+
+### Workflow
+1. User requests static content.
+2. The request is directed to a nearby CDN server.
+3. If the content is available (**Cache Hit**), it is delivered directly.
+4. If unavailable (**Cache Miss**), the CDN fetches content from the Origin Server and caches it.
+
+### Important Terminologies
+
+- **Static Content:** Images, CSS, JavaScript, and other files.
+- **Origin Server:** The original server where website content is stored.
+- **Cache Hit:** Requested content is found in the CDN cache.
+- **Cache Miss:** Requested content is not found in the CDN cache.
+
+### CDN Considerations
+
+1. **Cost:** CDN providers charge for data transfers and usage.
+2. **Cache Expiry:** Determines how long cached content remains available.
+3. **CDN Fallback:** If the CDN becomes unavailable, clients should be able to request resources from the Origin Server.
+4. **Invalidating Files:** Updated files should replace or invalidate old cached versions.
+
+### Using a CDN Worldwide
+- A single CDN provider can offer servers across multiple countries.
+- Users receive static content from nearby CDN servers.
+- There is no need to configure a separate CDN for every country.
+
+### Popular CDN Providers
+- Cloudflare
+- Amazon CloudFront
+- Akamai
+- Cloudinary and ImageKit (for image storage, optimization, and delivery)
+
+### Key Benefits
+- Faster content delivery.
+- Reduced load on the Origin Server.
+- Improved website performance.
+- Better experience for users worldwide.
 
 
 
