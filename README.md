@@ -82,4 +82,28 @@ My learning journey and notes on System Design.
 | Serialization | Converting data into a transferable format |
 | Deserialization | Converting serialized data into a usable format |
 
+## Vertical vs Horizontal Scaling
+
+### 1. Vertical Scaling (Scale Up)
+- Increases resources (CPU, RAM, storage) of an existing server.
+- Improves the capacity and performance of that server.
+- Has hardware limitations.
+- Does not provide built-in redundancy.
+
+**Example:** Upgrading a server from 4 GB RAM to 16 GB RAM.
+
+### 2. Horizontal Scaling (Scale Out)
+- Adds more servers to the existing server pool.
+- Distributes the workload across multiple servers.
+- Suitable for large-scale applications.
+- Provides better redundancy and scalability.
+
+**Example:** Adding three Node.js servers instead of running the application on a single server.
+
+### Key Difference
+
+- **Vertical Scaling:** Makes one server more powerful.
+- **Horizontal Scaling:** Adds more servers to handle increased traffic.
+
+
 
