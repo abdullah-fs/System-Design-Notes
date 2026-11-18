@@ -316,7 +316,7 @@ Multi-Data Center Setup means deploying an application across multiple geographi
 
 
 ## Section 10: Message Queue
-![Uploading image.png…]()
+<img width="846" height="1058" alt="image" src="https://github.com/user-attachments/assets/82d06739-4292-43d1-a320-04e26df4e9d0" />
 
 
 A Message Queue is a component that temporarily stores messages and enables asynchronous communication between services.
@@ -365,6 +365,61 @@ A durable message queue helps prevent messages from being lost if a consumer tem
 ### Key Concept
 
 **Producer → Message Queue → Consumer**
+
+
+
+## Section 11: Logging, Metrics, and Automation
+![Uploading image.png…]()
+
+
+These three components help monitor, analyze, and manage an application's performance and health.
+
+### 1. Logging
+Logging records events, activities, and errors that occur in an application.
+
+**Purpose:**
+- Track application errors.
+- Monitor system health.
+- Help developers identify and debug problems.
+
+### 2. Metrics
+Metrics measure application performance and user activity using numerical data.
+
+**Examples:**
+- Number of active users.
+- Average response time.
+- CPU and memory usage.
+- Application error rate.
+
+**Purpose:**
+- Analyze system performance.
+- Identify performance issues.
+- Monitor user activity.
+
+### 3. Automation
+Automation means performing repetitive tasks automatically without manual intervention.
+
+**Examples:**
+- Automated testing.
+- Automatic deployment.
+- Automatic scaling based on traffic.
+
+**CI/CD:** A process that automates code testing and application deployment.
+
+### Key Difference
+
+- **Logging:** What happened?
+- **Metrics:** How well is the system performing?
+- **Automation:** How can tasks be performed automatically?
+
+### Key Benefits
+- Easier error detection.
+- Better performance monitoring.
+- Reduced manual work.
+- Faster testing and deployment.
+
+
+
 
 
 
