@@ -133,5 +133,43 @@ A **Load Balancer** distributes incoming network traffic among multiple servers.
 - Supports horizontal scaling.
 
 
+## Section 5: Database Replication
+<img width="1202" height="1282" alt="image" src="https://github.com/user-attachments/assets/7fdc154a-b1e4-4b49-9b29-035a93068d76" />
+
+
+Database Replication is the process of maintaining copies of a database across multiple servers to improve performance, availability, and reliability.
+
+### Master-Slave Model
+
+#### 1. Master Database
+- Handles all write operations.
+- Insert, Update, and Delete commands are sent to the Master database.
+- Replicates data to Slave databases.
+
+#### 2. Slave Databases
+- Primarily handle read operations.
+- Receive replicated data from the Master database.
+- Distribute read traffic across multiple servers.
+
+### Benefits
+
+1. **Improved Performance:** Multiple Slave databases handle read requests in parallel.
+2. **High Availability:** Other healthy Slave databases can handle requests if one fails.
+3. **Data Redundancy:** Multiple database copies improve data reliability.
+
+### Failure Handling
+
+- **Slave Failure:** Read requests are redirected to other healthy Slaves. If no Slave is available, reads can temporarily go to the Master.
+- **Master Failure:** A healthy Slave can be promoted to become the new Master.
+- **Data Recovery:** The new Master may need synchronization or recovery if it does not contain the latest data.
+
+### Key Points
+- Master handles write operations.
+- Slaves primarily handle read operations.
+- Data is replicated from Master to Slaves.
+- Database replication improves performance and availability.
+
+
+
 
 
