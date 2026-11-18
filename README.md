@@ -29,6 +29,7 @@ My learning journey and notes on System Design.
 <img width="1222" height="712" alt="image" src="https://github.com/user-attachments/assets/5a8b5f4f-2be7-42ed-aae3-f0696b762d8c" />
 
 
+
 ## Section 2: Database Separation
 <img width="1204" height="700" alt="image" src="https://github.com/user-attachments/assets/3d02e9a3-268c-48c2-870b-9416952a2c5e" />
 
@@ -81,6 +82,8 @@ My learning journey and notes on System Design.
 | Latency | Time delay in communication |
 | Serialization | Converting data into a transferable format |
 | Deserialization | Converting serialized data into a usable format |
+
+
 
 ## Section 3: Vertical vs Horizontal Scaling
 
