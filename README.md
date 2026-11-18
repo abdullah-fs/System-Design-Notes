@@ -288,7 +288,7 @@ Stateless web servers make applications easier to scale because any server can h
 
 
 ## Section 9: Multi-Data Center Setup
-![Uploading image.png…]()
+<img width="874" height="216" alt="image" src="https://github.com/user-attachments/assets/5af63de8-8a99-4952-ac35-e36c3a463d56" />
 
 Multi-Data Center Setup means deploying an application across multiple geographical locations to improve availability and reduce latency.
 
@@ -313,6 +313,58 @@ Multi-Data Center Setup means deploying an application across multiple geographi
 
 - **Load Balancer:** Distributes traffic between multiple servers.
 - **GeoDNS:** Routes users between different geographical data centers.
+
+
+## Section 10: Message Queue
+![Uploading image.png…]()
+
+
+A Message Queue is a component that temporarily stores messages and enables asynchronous communication between services.
+
+### Main Components
+
+1. **Producer / Publisher:** Creates messages and sends them to the message queue.
+2. **Message Queue:** Stores messages until consumers are ready to process them.
+3. **Consumer / Subscriber:** Receives messages from the queue and performs the required tasks.
+
+### How It Works
+
+1. Producer creates a message.
+2. Message is sent to the queue.
+3. Queue stores the message.
+4. Consumer retrieves the message.
+5. Consumer processes the message.
+
+### Daily Life Example: Restaurant
+
+- Cashier (Producer): Receives the customer's order.
+- Order Ticket Line (Message Queue): Stores orders in a waiting line.
+- Kitchen Staff (Consumer): Takes orders and prepares food.
+
+### Asynchronous Communication
+
+Asynchronous communication allows the producer to continue its work without waiting for the consumer to finish processing the message.
+
+### Durability
+
+A durable message queue helps prevent messages from being lost if a consumer temporarily fails or restarts.
+
+### Popular Message Queue Tools
+
+- RabbitMQ
+- Apache Kafka
+- Amazon SQS
+
+### Key Benefits
+
+- Reduces workload on the main application.
+- Supports background processing.
+- Handles large numbers of messages.
+- Allows services to work independently.
+
+### Key Concept
+
+**Producer → Message Queue → Consumer**
 
 
 
