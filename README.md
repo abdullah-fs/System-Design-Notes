@@ -82,7 +82,7 @@ My learning journey and notes on System Design.
 | Serialization | Converting data into a transferable format |
 | Deserialization | Converting serialized data into a usable format |
 
-## Vertical vs Horizontal Scaling
+## Section 3: Vertical vs Horizontal Scaling
 
 ### 1. Vertical Scaling (Scale Up)
 - Increases resources (CPU, RAM, storage) of an existing server.
