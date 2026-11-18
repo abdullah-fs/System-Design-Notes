@@ -108,5 +108,30 @@ My learning journey and notes on System Design.
 - **Vertical Scaling:** Makes one server more powerful.
 - **Horizontal Scaling:** Adds more servers to handle increased traffic.
 
+## Section 4: Load Balancer
+<img width="1192" height="1004" alt="image" src="https://github.com/user-attachments/assets/b4cc5995-594e-442e-a147-bf9b6bf110c9" />
+
+A **Load Balancer** distributes incoming network traffic among multiple servers.
+
+### Benefits
+
+#### 1. Redundancy
+- If one server goes offline, traffic is redirected to other available servers.
+- Keeps the application running even if a server fails.
+
+**Example:** If Server 1 goes offline, traffic is routed to Server 2.
+
+#### 2. Scalability
+- Allows additional servers to be added when traffic increases.
+- Helps handle sudden traffic spikes.
+
+**Example:** If website traffic grows, additional servers can be added to handle incoming requests.
+
+### Key Points
+- Distributes traffic among multiple servers.
+- Improves availability and reliability.
+- Supports horizontal scaling.
+
+
 
 
