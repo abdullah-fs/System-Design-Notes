@@ -26,6 +26,8 @@ My learning journey and notes on System Design.
 **Mobile Applications**
 - Communicate with web servers using HTTP.
 - Commonly exchange data in JSON format.
+<img width="1222" height="712" alt="image" src="https://github.com/user-attachments/assets/5a8b5f4f-2be7-42ed-aae3-f0696b762d8c" />
+
 
 ## Section 2: Database Separation
 
