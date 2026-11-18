@@ -30,6 +30,8 @@ My learning journey and notes on System Design.
 
 
 ## Section 2: Database Separation
+<img width="1204" height="700" alt="image" src="https://github.com/user-attachments/assets/3d02e9a3-268c-48c2-870b-9416952a2c5e" />
+
 
 ### 4. Database Separation
 - The database is moved to a dedicated server as the user base grows.
