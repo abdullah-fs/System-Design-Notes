@@ -218,7 +218,7 @@ Redis can be used as a caching layer in a MERN application to store frequently r
 
 
 ## Section 7: Content Delivery Network (CDN)
-![Uploading image.png…]()
+<img width="908" height="832" alt="image" src="https://github.com/user-attachments/assets/49725cad-75d6-4698-913a-686b62530c29" />
 
 
 A **CDN** is a network of geographically distributed servers that caches and delivers static content (images, CSS, JavaScript) from locations closer to users.
@@ -259,6 +259,31 @@ A **CDN** is a network of geographically distributed servers that caches and del
 - Reduced load on the Origin Server.
 - Improved website performance.
 - Better experience for users worldwide.
+
+
+## Section 8: Stateless Web Tier
+![Uploading image.png…]()
+
+
+A Stateless Web Tier is an architecture where web servers do not store user session data locally. Instead, session data is stored in a shared datastore such as Redis or a database.
+
+### How It Works
+1. A user logs in through Server 1.
+2. Session information is stored in shared storage (e.g., Redis).
+3. The user's next request may go to Server 2.
+4. Server 2 retrieves the session information from the shared storage.
+5. The user remains logged in without logging in again.
+
+### Benefits
+1. **Easy Horizontal Scaling:** New servers can be added easily because session data is not stored on individual servers.
+2. **Auto-Scaling:** Servers can automatically increase or decrease based on traffic.
+
+### Key Difference
+- **Stateful:** Each server stores its own session data.
+- **Stateless:** Session data is stored in shared storage and accessed by all servers.
+
+### Key Point
+Stateless web servers make applications easier to scale because any server can handle a user's request.
 
 
 
