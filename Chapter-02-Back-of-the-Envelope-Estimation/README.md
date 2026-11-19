@@ -74,3 +74,36 @@ Power of Two refers to values obtained by raising 2 to different powers. It is i
 - Makes large data volume calculations easier.
 
 **Key Takeaway:** Understanding powers of two makes it easier to estimate storage, memory, and bandwidth requirements in system design.
+
+
+
+### 2. Latency Numbers Every Programmer Should Know
+
+Latency is the time taken to complete an operation in a computer system. Understanding latency helps developers identify performance bottlenecks and design faster systems.
+
+#### Important Latency Numbers (2020)
+
+| Operation | Latency |
+|---|---:|
+| L1 Cache Access | 0.5 ns |
+| L2 Cache Access | 7 ns |
+| Main Memory Access | 100 ns |
+| SSD Random Read | 150 µs |
+| HDD Random Seek | 10 ms |
+| Round-Trip in Data Center | 500 µs |
+| Inter-Region Data Center | 150 ms |
+
+#### Key Insights
+
+1. **Memory is Fast, Disk is Slow:** Accessing data from RAM is generally much faster than accessing it from storage devices.
+2. **Avoid Disk Seeks:** Reduce unnecessary disk operations to improve system performance.
+3. **Compress Data:** Use compression techniques such as Gzip and Brotli to reduce data transfer size and save bandwidth.
+
+#### Practical Applications
+
+- Use caching (Redis) to reduce repeated database queries.
+- Use database indexes to improve data retrieval.
+- Compress API responses to reduce network bandwidth.
+- Minimize unnecessary network communication.
+
+**Key Takeaway:** Understanding latency helps developers identify slow operations and improve overall system performance.
