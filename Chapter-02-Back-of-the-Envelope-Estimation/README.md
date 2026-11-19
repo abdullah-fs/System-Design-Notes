@@ -107,3 +107,41 @@ Latency is the time taken to complete an operation in a computer system. Underst
 - Minimize unnecessary network communication.
 
 **Key Takeaway:** Understanding latency helps developers identify slow operations and improve overall system performance.
+
+
+
+### 3. Availability Numbers
+
+Availability refers to the percentage of time a system remains operational and accessible to users. High Availability (HA) aims to minimize downtime.
+
+#### Uptime and Downtime
+
+- **Uptime:** The time during which a system is operational.
+- **Downtime:** The time during which a system is unavailable.
+
+#### Availability in Nines
+
+Availability is commonly expressed in nines.
+
+| Availability | Downtime Per Year |
+|---|---:|
+| 99% (Two Nines) | 3.65 days |
+| 99.9% (Three Nines) | 8.8 hours |
+| 99.99% (Four Nines) | 52 minutes |
+| 99.999% (Five Nines) | 5.3 minutes |
+| 99.9999% (Six Nines) | 31.56 seconds |
+
+#### SLA (Service Level Agreement)
+
+An SLA is an agreement between a service provider and a customer that defines expected service availability and performance.
+
+Cloud providers such as AWS, Google Cloud, and Microsoft Azure offer specific availability SLAs for their services.
+
+#### How to Improve Availability?
+
+- **Load Balancing:** Distributes incoming traffic across multiple servers.
+- **Redundancy:** Maintains backup servers and resources.
+- **Monitoring:** Detects system failures and performance issues.
+- **Failover:** Automatically switches to a backup system when the primary system fails.
+
+**Key Takeaway:** Higher availability means less downtime and better system reliability. The number of nines helps measure how reliable a system is.
