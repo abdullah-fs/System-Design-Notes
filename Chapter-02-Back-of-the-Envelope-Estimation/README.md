@@ -227,3 +227,89 @@ Five-Year Storage = 54,750 TB ≈ 55 PB
 - Large-scale systems require careful planning for traffic and data growth.
 
 **Note:** These are simplified estimates based on the given assumptions. They exclude tweet metadata, database indexes, replication, and backups.
+
+
+## Section 3: Practice Example – Instagram QPS and Storage Estimation
+
+### 1. Assumptions
+
+- Monthly Active Users (MAU): 200 Million
+- Daily Active Users (DAU): 40% of MAU
+- Average Posts per User per Day: 3
+- Posts Containing Images: 20%
+- Average Image Size: 2 MB
+- Data Retention Period: 3 Years
+- Peak Traffic: 2 times Average Traffic
+
+### 2. QPS Estimation
+
+**Step 1: Calculate Daily Active Users**
+
+DAU = 200M × 40%
+
+DAU = 80M
+
+**Step 2: Calculate Daily Posts**
+
+Daily Posts = 80M × 3
+
+Daily Posts = 240M
+
+**Step 3: Calculate Average QPS**
+
+QPS = Total Daily Posts / 86,400
+
+QPS = 240M / 86,400
+
+QPS ≈ 2,778
+
+**Step 4: Calculate Peak QPS**
+
+Peak QPS = Average QPS × 2
+
+Peak QPS = 2,778 × 2
+
+Peak QPS ≈ 5,556
+
+### 3. Image Storage Estimation
+
+**Step 1: Calculate Daily Image Posts**
+
+Daily Image Posts = 240M × 20%
+
+Daily Image Posts = 48M
+
+**Step 2: Calculate Daily Image Storage**
+
+Daily Storage = 48M × 2 MB
+
+Daily Storage = 96 TB
+
+**Step 3: Calculate Three-Year Storage**
+
+Three-Year Storage = 96 TB × 365 × 3
+
+Three-Year Storage = 105,120 TB
+
+Three-Year Storage ≈ 105.12 PB
+
+### 4. Final Estimation Summary
+
+| Metric | Estimated Value |
+|---|---:|
+| Daily Active Users | 80M |
+| Daily Posts | 240M |
+| Average QPS | 2,778 |
+| Peak QPS | 5,556 |
+| Daily Image Posts | 48M |
+| Daily Image Storage | 96 TB |
+| Three-Year Image Storage | 105.12 PB |
+
+### Key Takeaways
+
+- DAU represents daily active users.
+- QPS measures average requests or operations per second.
+- Peak QPS estimates maximum expected traffic.
+- Image storage estimation helps plan long-term infrastructure requirements.
+
+**Note:** This is a simplified estimation. It excludes post text, metadata, database indexes, replicas, backups, and storage overhead.
