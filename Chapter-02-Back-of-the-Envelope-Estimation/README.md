@@ -145,3 +145,85 @@ Cloud providers such as AWS, Google Cloud, and Microsoft Azure offer specific av
 - **Failover:** Automatically switches to a backup system when the primary system fails.
 
 **Key Takeaway:** Higher availability means less downtime and better system reliability. The number of nines helps measure how reliable a system is.
+
+
+
+## Section 2: Example Estimation – Twitter QPS and Storage Requirements
+
+### 1. Assumptions
+
+- Monthly Active Users (MAU): 300 Million
+- Daily Active Users (DAU): 50% of MAU
+- Average Tweets per User per Day: 2
+- Tweets Containing Media: 10%
+- Data Retention Period: 5 Years
+
+### 2. Query Per Second (QPS) Estimation
+
+**Step 1: Calculate Daily Active Users**
+
+DAU = 300M × 50% = 150M
+
+**Step 2: Calculate Daily Tweets**
+
+Daily Tweets = 150M × 2 = 300M
+
+**Step 3: Calculate Average QPS**
+
+QPS = Total Daily Tweets / 86,400
+
+QPS = 300M / 86,400 ≈ 3,500
+
+**Step 4: Calculate Peak QPS**
+
+Assuming peak traffic is 2 times the average traffic:
+
+Peak QPS = 3,500 × 2 ≈ 7,000
+
+### 3. Media Storage Estimation
+
+#### Tweet Size Components
+
+| Component | Size |
+|---|---:|
+| tweet_id | 64 Bytes |
+| text | 140 Bytes |
+| media | 1 MB |
+
+**Step 1: Calculate Daily Media Tweets**
+
+Daily Media Tweets = 150M × 2 × 10%
+
+Daily Media Tweets = 30M
+
+**Step 2: Calculate Daily Media Storage**
+
+Daily Media Storage = 30M × 1 MB
+
+Daily Media Storage = 30 TB
+
+**Step 3: Calculate Five-Year Storage**
+
+Five-Year Storage = 30 TB × 365 × 5
+
+Five-Year Storage = 54,750 TB ≈ 55 PB
+
+### 4. Final Estimation Summary
+
+| Metric | Estimated Value |
+|---|---:|
+| Daily Active Users | 150M |
+| Daily Tweets | 300M |
+| Average QPS | 3,500 |
+| Peak QPS | 7,000 |
+| Daily Media Storage | 30 TB |
+| Five-Year Media Storage | 55 PB |
+
+### Key Takeaways
+
+- QPS measures the number of requests processed per second.
+- Peak QPS estimates the maximum expected traffic.
+- Storage estimation helps determine future storage requirements.
+- Large-scale systems require careful planning for traffic and data growth.
+
+**Note:** These are simplified estimates based on the given assumptions. They exclude tweet metadata, database indexes, replication, and backups.
