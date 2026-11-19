@@ -287,3 +287,63 @@ Combines Fanout on Write and Fanout on Read.
 - Celebrity → 50 Million Followers → Fanout on Read.
 
 **Golden Rule:** Focus on the most important components, identify potential bottlenecks, and design solutions that improve system performance without unnecessary complexity.
+
+
+
+## Step 4: Wrap-Up
+
+### 1. Key Objectives
+
+- Highlight areas for improvement.
+- Recap the overall system design.
+- Discuss future enhancements and follow-up questions.
+
+### 2. Approach
+
+#### A. Identify Bottlenecks
+
+Discuss potential system limitations and scaling strategies.
+
+**Examples:**
+- Server overload
+- Database performance issues
+- Network failures
+- Increased response time
+
+#### B. Summarize Design
+
+Recap the major design decisions and trade-offs.
+
+- Main system components
+- Database and caching strategies
+- API architecture
+- Data flow
+- Scaling decisions
+
+#### C. Propose Enhancements
+
+Discuss how the system can handle future growth and failures.
+
+**Scaling from 1 Million to 10 Million Users:**
+- Horizontal Scaling
+- Load Balancing
+- Caching
+- Database Optimization
+- Database Sharding (when needed)
+
+**Error Handling:**
+- Retry Mechanisms
+- Timeouts
+- Health Checks
+- Failover Mechanisms
+- Fault Tolerance
+
+### 3. Key Takeaways
+
+- Identify the system's weaknesses.
+- Summarize important design decisions.
+- Explain trade-offs.
+- Suggest future improvements.
+- Consider scalability and reliability.
+
+**Golden Rule:** A good system design should not only work today but should also handle future growth and unexpected failures.
