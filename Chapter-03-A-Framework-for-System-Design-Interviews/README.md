@@ -89,3 +89,89 @@ Before designing a news feed, ask:
 - Make design decisions based on clarified requirements.
 
 **Golden Rule:** Never start designing a system before understanding the problem. Asking the right questions is half the solution.
+
+
+
+## Step 2: Propose High-Level Design and Get Buy-In
+
+### 1. Key Objectives
+
+- Develop a high-level system architecture.
+- Identify major system components.
+- Collaborate with the interviewer to refine the design.
+- Validate the design against requirements and scalability constraints.
+
+### 2. Draft a Blueprint
+
+Create a basic architecture diagram using the following components:
+
+- **Clients:** Web and mobile applications.
+- **APIs:** Handle communication between clients and backend.
+- **Application Servers:** Process business logic.
+- **Database:** Store permanent data.
+- **Cache:** Store frequently accessed data.
+- **CDN:** Deliver images and videos efficiently.
+
+### 3. Back-of-the-Envelope Calculations
+
+Perform approximate calculations to check whether the proposed design can handle expected traffic.
+
+Important metrics:
+- Daily Active Users (DAU)
+- Requests Per Second (QPS)
+- Peak QPS
+- Storage Requirements
+- Bandwidth Requirements
+
+### 4. Walk Through Use Cases
+
+Identify how different operations work and check possible edge cases.
+
+**Example:**
+- User publishes a post.
+- Post is stored in the database.
+- Followers' feeds are updated.
+- Users retrieve and view their feeds.
+
+### 5. Example: News Feed System
+
+A news feed system has two main flows:
+
+#### A. Feed Publishing Flow
+
+1. User creates a post.
+2. The post is sent to the backend through an API.
+3. The post is stored in the database.
+4. Followers' feeds are updated with the new post.
+
+**Fanout on Write:** Distributing a new post to followers' feeds when the post is published.
+
+#### B. Feed Retrieval Flow
+
+1. User requests their news feed.
+2. Backend retrieves relevant posts.
+3. Posts are arranged in reverse chronological order.
+4. The feed is returned to the user.
+
+**Fanout on Read:** Retrieving and combining posts from followed users when a user requests their feed.
+
+### 6. Fanout on Write vs Fanout on Read
+
+| Fanout on Write | Fanout on Read |
+|---|---|
+| Feeds are updated when a post is published. | Posts are retrieved when the feed is requested. |
+| Faster feed retrieval. | More work during feed retrieval. |
+| Expensive for users with millions of followers. | Useful for users with very large follower counts. |
+
+**Hybrid Approach:** Combining Fanout on Write and Fanout on Read to balance publishing and retrieval performance.
+
+### 7. Key Takeaways
+
+- Create a high-level architecture diagram.
+- Identify major system components.
+- Perform capacity and traffic estimations.
+- Explain publishing and retrieval flows.
+- Consider edge cases and scalability.
+- Get feedback and refine the design.
+
+**Golden Rule:** Build a high-level blueprint, validate it against expected traffic, and refine it through discussion before moving to detailed design.
