@@ -45,7 +45,8 @@ Back-of-the-Envelope Estimation helps system designers make informed decisions a
 ### 1. Power of Two
 
 Power of Two refers to values obtained by raising 2 to different powers. It is important in System Design for understanding data sizes and performing storage, memory, and bandwidth calculations.
-![Uploading image.png…]()
+<img width="1444" height="784" alt="image" src="https://github.com/user-attachments/assets/0a7fcc13-cc34-4274-919a-0cf9f735bc58" />
+
 
 
 #### Important Powers of Two
@@ -313,3 +314,58 @@ Three-Year Storage ≈ 105.12 PB
 - Image storage estimation helps plan long-term infrastructure requirements.
 
 **Note:** This is a simplified estimation. It excludes post text, metadata, database indexes, replicas, backups, and storage overhead.
+
+
+
+## Section 3: Tips for Effective Estimation
+
+### 1. Rounding and Approximation
+
+Exact precision is not always necessary in system design estimation. Simplify complex calculations using rounded numbers to get quick approximate results.
+
+**Example:**
+
+99987 / 9.1 ≈ 100,000 / 10 = 10,000
+
+**Benefits:**
+- Saves calculation time.
+- Simplifies complex calculations.
+- Makes large numbers easier to handle.
+
+### 2. Write Down Assumptions
+
+Always document assumptions before starting an estimation.
+
+**Example:**
+- Total Users: 1 Million
+- Daily Active Users: 50%
+- Requests per User: 10 per Day
+
+Clear assumptions make calculations easier to understand and verify.
+
+### 3. Label Units
+
+Always include appropriate units in calculations to avoid ambiguity.
+
+**Examples:**
+- 5 MB
+- 100 GB
+- 500 Requests/Second
+- 10 ms
+
+### 4. Common Estimation Scenarios
+
+| Scenario | Purpose |
+|---|---|
+| QPS | Measures requests per second. |
+| Peak QPS | Estimates maximum expected traffic. |
+| Storage Requirements | Estimates total data storage needed. |
+| Cache Requirements | Estimates memory needed for frequently accessed data. |
+| Number of Servers | Estimates the number of servers required to handle workloads. |
+
+### Key Takeaways
+
+- Use rounding to simplify calculations.
+- Clearly document all assumptions.
+- Always include units.
+- Consider traffic, storage, caching, and server requirements during system design estimation.
