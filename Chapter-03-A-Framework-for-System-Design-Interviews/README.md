@@ -369,3 +369,25 @@ Discuss how the system can handle future growth and failures.
 ### Key Takeaway
 
 A successful system design interview requires clear communication, collaboration, flexibility, and a strong focus on practical solutions.
+
+
+## Time Management
+
+### Suggested Time Allocation (45-Minute Interview)
+
+| Step | Time Allocation |
+|---|---:|
+| 1. Understand Problem and Scope | 3–10 minutes |
+| 2. High-Level Design and Buy-In | 10–15 minutes |
+| 3. Deep Dive | 10–25 minutes |
+| 4. Wrap-Up | 3–5 minutes |
+
+### Key Takeaways
+
+- Manage time effectively during the interview.
+- Avoid spending too much time on one step.
+- Prioritize important requirements and components.
+- Keep some time for final discussion and improvements.
+- Adjust time according to system complexity.
+
+**Golden Rule:** Manage your time wisely and make sure you cover all four steps within the interview duration.
