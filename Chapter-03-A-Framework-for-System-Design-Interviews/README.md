@@ -347,3 +347,25 @@ Discuss how the system can handle future growth and failures.
 - Consider scalability and reliability.
 
 **Golden Rule:** A good system design should not only work today but should also handle future growth and unexpected failures.
+
+
+
+## Best Practices
+
+### 1. Dos
+
+- **Ask Questions:** Clarify requirements and ambiguities before designing.
+- **Communicate:** Explain your thought process throughout the interview.
+- **Iterate with the Interviewer:** Treat the interviewer as a collaborator and improve the design based on feedback.
+- **Show Flexibility:** Suggest alternative approaches and refine your design.
+- **Focus on Critical Components:** Prioritize the most important parts of the system.
+
+### 2. Don'ts
+
+- **Avoid Premature Solutions:** Do not start designing before understanding the requirements.
+- **Don't Go Silent:** Communicate regularly and explain your decisions.
+- **Avoid Over-Engineering:** Focus on practical and scalable solutions instead of unnecessary complexity.
+
+### Key Takeaway
+
+A successful system design interview requires clear communication, collaboration, flexibility, and a strong focus on practical solutions.
