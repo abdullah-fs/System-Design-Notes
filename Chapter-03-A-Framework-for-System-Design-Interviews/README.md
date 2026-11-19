@@ -391,3 +391,102 @@ A successful system design interview requires clear communication, collaboration
 - Adjust time according to system complexity.
 
 **Golden Rule:** Manage your time wisely and make sure you cover all four steps within the interview duration.
+
+
+# Project: Design a WhatsApp-Like Chat System
+<img width="1642" height="1146" alt="image" src="https://github.com/user-attachments/assets/08ed3746-886a-4c2b-a55c-b878a36eef15" />
+
+
+## Objective
+
+Design a scalable real-time messaging system that allows users to send and receive messages, track online status, and access previous conversations.
+
+## 1. Functional Requirements
+
+- Send and receive messages.
+- Support real-time communication.
+- Track online/offline status.
+- Show message delivery status.
+- Store and retrieve conversation history.
+
+## 2. Non-Functional Requirements
+
+- Low latency
+- High availability
+- Scalability
+- Reliability
+- Data security
+
+## 3. High-Level Architecture
+
+Main Components:
+
+- Client (Web/Mobile)
+- API Gateway
+- Application Server
+- WebSocket Server
+- MongoDB
+- Redis
+- Message Queue
+- Load Balancer
+
+## 4. Core Design Components
+
+### A. Real-Time Communication
+Use WebSockets to establish persistent connections between clients and servers.
+
+### B. Message Storage
+Store messages and conversation history in MongoDB.
+
+### C. Online/Offline Status
+Use Redis to maintain temporary online status information.
+
+### D. Message Processing
+Use message queues to process and deliver messages reliably.
+
+### E. Message Delivery Status
+Maintain message states such as:
+- Sent
+- Delivered
+- Read
+
+## 5. Bottlenecks and Solutions
+
+| Bottleneck | Possible Solution |
+|---|---|
+| Too many connections | Multiple WebSocket servers |
+| Slow message delivery | Optimized message processing |
+| Server failure | Failover and reconnection |
+| Message loss | Persistent queues and acknowledgements |
+| Database overload | Indexing and sharding |
+
+## 6. Scaling Scenario
+
+Assumptions:
+
+- Registered Users: 1 Million
+- Daily Active Users: 200,000
+- Messages per Active User per Day: 20
+- Average Message Size: 1 KB
+
+Calculate:
+- Daily Messages
+- Average Messages per Second
+- Daily Storage
+- Three-Year Storage
+
+Discuss how to scale the architecture for 10 million users.
+
+## 7. Error Handling
+
+- Retry failed message delivery.
+- Use acknowledgements to confirm delivery.
+- Implement connection timeouts.
+- Reconnect clients after network failures.
+- Use health checks and failover mechanisms.
+
+## 8. Final Design Summary
+
+Summarize the architecture, important design decisions, bottlenecks, trade-offs, and future improvements.
+
+**Goal:** Apply all four steps of the System Design Interview Framework to design a reliable and scalable messaging system.
