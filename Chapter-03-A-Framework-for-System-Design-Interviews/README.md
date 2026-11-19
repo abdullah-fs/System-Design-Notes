@@ -175,3 +175,115 @@ A news feed system has two main flows:
 - Get feedback and refine the design.
 
 **Golden Rule:** Build a high-level blueprint, validate it against expected traffic, and refine it through discussion before moving to detailed design.
+
+
+
+## Step 3: Design Deep Dive
+
+### 1. Key Objectives
+
+- Explore critical system components in detail.
+- Demonstrate technical understanding.
+- Adapt the design according to changing requirements.
+- Identify potential performance issues.
+
+### 2. Approach
+
+#### A. Prioritize Key Components
+
+Focus on the components most relevant to the system.
+
+**Example: News Feed System**
+- Feed Publishing
+- Feed Retrieval
+- Database
+- Redis Cache
+
+#### B. Discuss Bottlenecks
+
+Identify components that may cause performance problems and propose suitable solutions.
+
+**Example:**
+
+If a celebrity has 50 million followers, updating every follower's feed using Fanout on Write can create huge processing overhead.
+
+**Possible Solutions:**
+- Fanout on Read
+- Hybrid Approach
+- Message Queues
+- Background Workers
+
+#### C. Balance Detail
+
+- Focus on important components.
+- Avoid unnecessary complexity.
+- Do not over-engineer the system.
+- Explain technical decisions clearly.
+
+### 3. Example Topics
+
+#### A. URL Shortener
+
+Important areas:
+- Hash Function Design
+- Unique Short URLs
+- URL Mapping
+- Redirect Mechanism
+
+#### B. Chat System
+
+Important areas:
+- Real-Time Messaging
+- Latency Reduction
+- WebSockets
+- Online/Offline Status
+- Message Delivery
+
+#### C. News Feed System
+
+Important areas:
+- Feed Publishing
+- Feed Retrieval
+- Fanout on Write
+- Fanout on Read
+- Database and Cache Performance
+
+### 4. Key Takeaways
+
+- Focus on critical components.
+- Understand the internal working of components.
+- Identify performance bottlenecks.
+- Propose appropriate solutions.
+- Balance technical detail and complexity.
+- Adapt the design according to requirements.
+
+### 5. Fanout Strategies
+
+Fanout is a technique used to distribute posts to users' feeds.
+
+#### A. Fanout on Write
+Distributes a post to followers' feeds immediately when the post is published.
+
+- Faster feed retrieval.
+- More write operations.
+- Expensive for users with millions of followers.
+
+#### B. Fanout on Read
+Retrieves and combines posts when a user opens their feed.
+
+- Less processing during publishing.
+- More processing during feed retrieval.
+- Useful for users with millions of followers.
+
+#### C. Hybrid Approach
+Combines Fanout on Write and Fanout on Read.
+
+- Fanout on Write for normal users.
+- Fanout on Read for celebrities or users with millions of followers.
+- Balances read and write performance.
+
+**Example:**
+- Normal User → 500 Followers → Fanout on Write.
+- Celebrity → 50 Million Followers → Fanout on Read.
+
+**Golden Rule:** Focus on the most important components, identify potential bottlenecks, and design solutions that improve system performance without unnecessary complexity.
