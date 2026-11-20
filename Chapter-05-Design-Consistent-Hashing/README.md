@@ -289,3 +289,32 @@ Imagine a restaurant with three delivery riders: S0, S1, and S2.
 **When a rider leaves:**
 - Rider S1 leaves the restaurant.
 - His delivery orders are reassigned
+
+
+
+## Benefits of Consistent Hashing
+
+### 1. Minimized Redistribution
+- Only a fraction of keys are reassigned when servers are added or removed.
+- Reduces unnecessary data movement and redistribution overhead.
+
+### 2. Scalability
+- Supports horizontal scaling by allowing new servers to join the system.
+- Makes it easier to expand distributed systems.
+
+### 3. Mitigates Hotspots
+- Helps distribute keys more evenly across servers.
+- Reduces the chances of individual servers becoming overloaded.
+- Virtual Nodes further improve load balancing.
+
+## Real-World Applications
+
+1. **Amazon DynamoDB:** Uses consistent hashing concepts to distribute data across storage partitions.
+2. **Apache Cassandra:** Uses consistent hashing with a token ring to distribute data across cluster nodes.
+3. **Discord:** Uses consistent hashing techniques in parts of its distributed infrastructure.
+4. **Akamai CDN:** Uses hashing-based techniques to distribute and route content across its global server network.
+5. **Maglev Load Balancer:** Uses consistent hashing to efficiently distribute network traffic across backend servers.
+
+## Summary
+
+Consistent Hashing minimizes data redistribution, supports horizontal scaling, and helps reduce server hotspots. It is an important technique used in distributed databases, content delivery networks, and load balancing systems.
