@@ -124,3 +124,60 @@ A rate limiter can be implemented in two ways:
 - Redis can manage shared counters in distributed systems.
 - HTTP `429` indicates that the request limit has been exceeded.
 - A good rate limiter should be accurate, fast, memory-efficient, and fault-tolerant.
+
+
+
+## Step 2: High-Level Design
+
+### 1. Placement Options
+<img width="1274" height="494" alt="image" src="https://github.com/user-attachments/assets/89147718-a9c7-465c-a72e-1f9a42391560" />
+
+
+Rate limiting can be implemented at different layers of a system. The placement depends on the application architecture, security requirements, and available resources.
+
+#### 1.1 Client-Side Implementation
+- Rate limiting logic is implemented on the frontend.
+- It can improve user experience by preventing unnecessary requests.
+- However, users can modify or bypass client-side restrictions.
+- It is not reliable for security or actual request control.
+
+#### 1.2 Server-Side Implementation
+- Rate limiting is implemented on the backend server.
+- Every incoming request is checked against defined limits.
+- Excessive requests are rejected by the server.
+- It provides better control, security, and reliability.
+
+#### 1.3 Middleware (API Gateway)
+- Rate limiting is implemented in middleware or an API Gateway.
+- The gateway checks incoming requests before forwarding them to backend services.
+- It provides centralized rate limiting across multiple services.
+- It is especially useful in microservices architectures.
+
+### 2. Guidelines for Placement
+
+#### 2.1 Evaluate Current Tech Stack
+- Consider the existing application architecture and technology stack.
+- Choose an implementation that integrates efficiently with the system.
+- For example, Express middleware can work well for a simple application.
+
+#### 2.2 Select Appropriate Algorithms
+- Choose a rate-limiting algorithm according to business requirements.
+- Consider traffic patterns, request limits, and system behavior.
+- Common algorithms include Token Bucket, Leaky Bucket, Fixed Window, and Sliding Window.
+
+#### 2.3 Use API Gateway for Microservices
+- An API Gateway is useful when an application uses multiple microservices.
+- It provides centralized rate limiting.
+- Common rules can be applied before requests reach individual services.
+
+#### 2.4 Consider Commercial Solutions
+- Commercial rate-limiting solutions can reduce development and maintenance effort.
+- They are useful when development resources are limited.
+- Consider cost, scalability, and customization before choosing one.
+
+### 3. Key Takeaways
+- Client-side rate limiting is easy to bypass.
+- Server-side implementation provides reliable request control.
+- API Gateway offers centralized rate limiting for microservices.
+- Algorithm selection depends on business requirements.
+- Commercial solutions can save development time and resources.
