@@ -159,3 +159,83 @@ Only the affected keys are reassigned to Server D.
 ### Summary
 
 Consistent Hashing distributes data across servers using a circular hash ring. It assigns keys to the next clockwise server and minimizes data movement when the server pool changes.
+
+
+
+# Virtual Nodes (VNodes)
+
+## Challenges in Basic Consistent Hashing
+
+Basic Consistent Hashing has two main problems:
+
+1. **Uneven Partition Sizes:** Some servers may receive larger portions of the hash ring than others.
+2. **Non-uniform Key Distribution:** Some servers may receive significantly more keys or requests, causing load imbalance and hotspots.
+
+## Solution: Virtual Nodes
+
+Virtual Nodes (VNodes) solve these problems by representing each physical server with multiple virtual nodes on the hash ring.
+
+- Each virtual node has its own position on the ring.
+- All virtual nodes belonging to one physical server point to that same server.
+- Keys are assigned to the nearest virtual node in the clockwise direction.
+- Increasing the number of virtual nodes generally improves data distribution and load balancing.
+
+## Example
+
+Suppose we have three physical servers:
+
+| Physical Server | Virtual Nodes |
+|---|---|
+| Server A | A1, A2, A3 |
+| Server B | B1, B2, B3 |
+| Server C | C1, C2, C3 |
+
+Each virtual node gets a separate position on the hash ring. This allows every physical server to handle multiple smaller portions of the ring instead of one large portion.
+
+## Benefits
+
+- More balanced data distribution.
+- Improved load balancing.
+- Reduced chances of server hotspots.
+- Better distribution when servers are added or removed.
+- More virtual nodes generally result in a more balanced distribution and lower standard deviation.
+
+## Standard Deviation
+
+Standard deviation measures how much the data distribution varies from the average.
+
+- **High standard deviation:** Large differences in server load.
+- **Low standard deviation:** More balanced server load.
+
+## Daily-Life Example: Restaurant Delivery
+
+Imagine a restaurant with three delivery riders:
+
+- Rider A
+- Rider B
+- Rider C
+
+Without multiple delivery zones, Rider A might receive 600 orders, Rider B 200, and Rider C 100.
+
+To balance the workload, the manager assigns multiple delivery zones to each rider:
+
+- Rider A → A1, A2, A3
+- Rider B → B1, B2, B3
+- Rider C → C1, C2, C3
+
+Now orders can be distributed across different zones, helping balance the workload among riders.
+
+**Connection to Consistent Hashing:**
+
+| Restaurant | Consistent Hashing |
+|---|---|
+| Delivery rider | Physical server |
+| Delivery zone | Virtual node |
+| Customer order | Data key |
+| Assigning an order | Assigning a key to a server |
+
+**Important:** A1, A2, and A3 are not separate riders. They represent the same physical Rider A, just as multiple virtual nodes represent one physical server.
+
+## Summary
+
+Virtual Nodes allow one physical server to occupy multiple positions on the hash ring. They improve key distribution, reduce load imbalance, and make consistent hashing more efficient.
