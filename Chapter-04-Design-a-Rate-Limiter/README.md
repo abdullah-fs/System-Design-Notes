@@ -350,3 +350,53 @@ Redis Sorted Sets can store request timestamps.
 
 #### Key Takeaway
 Sliding Window Log provides accurate rate limiting by tracking individual request timestamps, but it requires more memory and processing.
+
+
+
+### 5. Sliding Window Counter Algorithm
+<img width="1436" height="730" alt="image" src="https://github.com/user-attachments/assets/b8d31c75-debd-47f5-84e2-fd1655815772" />
+
+#### Description
+The Sliding Window Counter algorithm combines Fixed Window Counter and Sliding Window concepts to estimate the number of requests in a rolling time window.
+
+- It maintains request counters for the previous and current windows.
+- It uses a weighted portion of the previous window's requests.
+- It combines this value with the current window's request count.
+- The estimated count is compared against the rate limit.
+
+#### Working Example
+Suppose the rate limit is 100 requests per minute.
+
+- Previous window count: 80 requests.
+- Current window count: 30 requests.
+- 50% of the previous window overlaps with the current rolling window.
+
+Estimated Count:
+
+`(80 × 50%) + 30 = 70 requests`
+
+Since the estimated count is below 100, the new request can be allowed.
+
+#### Important Formula
+
+`Estimated Count = (Previous Count × Overlap Percentage) + Current Count`
+
+- **Previous Count:** Total requests in the previous window.
+- **Overlap Percentage:** The portion of the previous window overlapping with the current rolling window.
+- **Current Count:** Total requests in the current window.
+
+#### Advantages (Pros)
+- Memory-efficient because it stores counters instead of individual timestamps.
+- Reduces the boundary burst problem of Fixed Window Counter.
+- Provides smoother rate limiting.
+- Offers a good balance between performance and accuracy.
+
+#### Disadvantages (Cons)
+- Calculates an estimated request count rather than an exact count.
+- May not enforce perfectly strict limits in every situation.
+
+#### MERN Stack Example
+Redis can maintain previous and current window counters. Express.js middleware can use these counters to calculate the estimated request count and decide whether to allow or reject a request.
+
+#### Key Takeaway
+Sliding Window Counter combines the efficiency of Fixed Window Counter with the smoother behavior of a rolling window, while using less memory than Sliding Window Log.
