@@ -42,3 +42,49 @@ Consistent Hashing minimizes this redistribution by moving only the affected dat
 ## Summary
 
 Consistent Hashing is an effective technique for distributing data across multiple servers while minimizing data movement when servers are added or removed.
+
+
+
+## The Rehashing Problem
+
+### Explanation
+
+Traditional hashing methods distribute data across servers using the following formula:
+
+```javascript
+serverIndex = hash(key) % N
+```
+
+Where:
+- `hash(key)`: Hash value of the data key.
+- `N`: Total number of servers.
+- `%`: Modulo operator.
+
+When the number of servers changes, the modulo result changes, causing many keys to be reassigned.
+
+### Problems
+
+**1. Adding a Server**
+- Adding a new server changes the total server count.
+- Many keys get assigned to different servers.
+- Existing cache entries may become inaccessible through their previous mappings.
+
+**2. Removing a Server**
+- Removing a server changes the server count.
+- Most keys may be reassigned to other servers.
+- This leads to increased cache misses.
+
+### Key Issues
+
+- **Cache Misses:** Previously cached data cannot be found at the newly calculated server.
+- **Data Redistribution:** A large number of keys need reassignment.
+- **Performance Degradation:** Additional database requests increase latency.
+- **Server Overload:** Increased requests can overload backend servers.
+
+### Limitations
+
+Traditional hashing works well when the number of servers remains fixed. However, it becomes inefficient when servers are frequently added or removed.
+
+### Solution
+
+Consistent Hashing solves this problem by minimizing key redistribution when the server pool changes.
