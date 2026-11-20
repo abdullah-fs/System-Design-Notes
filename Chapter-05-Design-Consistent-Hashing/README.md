@@ -239,3 +239,53 @@ Now orders can be distributed across different zones, helping balance the worklo
 ## Summary
 
 Virtual Nodes allow one physical server to occupy multiple positions on the hash ring. They improve key distribution, reduce load imbalance, and make consistent hashing more efficient.
+
+
+
+## Affected Keys
+
+In Consistent Hashing, only a specific range of keys is redistributed when a server is added or removed. Other keys generally remain on their existing servers.
+
+### 1. Server Addition
+
+When a new server is added:
+
+- The new server gets a position on the hash ring.
+- It takes responsibility for keys between its predecessor and its own position.
+- Only those affected keys are moved to the new server.
+
+**Example:** If S4 is added after S3, keys between S3 and S4 are redistributed to S4.
+
+### 2. Server Removal
+
+When a server is removed:
+
+- The server is removed from the hash ring.
+- Its affected keys are assigned to the next clockwise server.
+- Other keys generally remain unchanged.
+
+**Example:** If S1 is removed, its keys are transferred to the next clockwise server, S2.
+
+### 3. Role of Virtual Nodes
+
+Virtual Nodes help distribute the affected key ranges among multiple surviving physical servers.
+
+- Each physical server has multiple virtual nodes on the ring.
+- When a server fails, its different key ranges may be assigned to different surviving servers.
+- This helps balance the additional load.
+- Virtual Nodes improve load distribution but do not eliminate the extra workload caused by server failure.
+
+**Important:** Virtual Nodes do not automatically replicate data. Replication is a separate technique used to maintain copies of data on multiple servers.
+
+### 4. Daily-Life Example: Restaurant Delivery
+
+Imagine a restaurant with three delivery riders: S0, S1, and S2.
+
+**When a new rider joins:**
+- A new rider S4 joins the team.
+- Some delivery areas previously handled by another rider are assigned to S4.
+- Only affected orders are redistributed.
+
+**When a rider leaves:**
+- Rider S1 leaves the restaurant.
+- His delivery orders are reassigned
