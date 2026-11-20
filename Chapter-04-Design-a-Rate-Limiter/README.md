@@ -400,3 +400,48 @@ Redis can maintain previous and current window counters. Express.js middleware c
 
 #### Key Takeaway
 Sliding Window Counter combines the efficiency of Fixed Window Counter with the smoother behavior of a rolling window, while using less memory than Sliding Window Log.
+
+
+
+## High-Level Architecture
+<img width="1470" height="1106" alt="image" src="https://github.com/user-attachments/assets/df90155f-c2d4-4fcb-bb71-2285e822eff3" />
+
+### 1. Data Storage
+
+- Use an in-memory data store such as Redis for fast counter operations.
+- Redis stores request counts for users or clients.
+- It provides fast read and update operations.
+- TTL (Time To Live) can automatically remove expired counters.
+
+### 2. Request Processing Flow
+
+**Step 1: Client Sends Request**
+- The client sends an API request.
+- The request first reaches the rate-limiting middleware.
+
+**Step 2: Middleware Checks Redis**
+- Middleware identifies the user or client.
+- It retrieves the current request counter from Redis.
+- The counter is compared against the configured rate limit.
+
+**Step 3: Process or Reject Request**
+- If the request is within the allowed limit, it is forwarded to the backend application.
+- If the limit is exceeded, the request is rejected.
+- The server returns HTTP `429 Too Many Requests`.
+
+### 3. Example
+
+Suppose a user is allowed 100 requests per minute.
+
+1. The client sends an API request.
+2. Middleware checks the user's counter in Redis.
+3. If the limit is not exceeded, the request reaches the backend.
+4. Otherwise, the middleware returns a `429 Too Many Requests` response.
+
+### 4. Key Takeaways
+
+- Redis provides fast storage for request counters.
+- Middleware acts as the rate-limiting layer.
+- Requests are checked before reaching the backend.
+- Allowed requests are processed; excessive requests are rejected.
+- HTTP 429 indicates that the rate limit has been exceeded.
