@@ -68,6 +68,9 @@ When the number of servers changes, the modulo result changes, causing many keys
 - Adding a new server changes the total server count.
 - Many keys get assigned to different servers.
 - Existing cache entries may become inaccessible through their previous mappings.
+<img width="1284" height="708" alt="image" src="https://github.com/user-attachments/assets/ac950065-640d-4257-a503-7cfd250af05d" />
+<img width="1246" height="814" alt="image" src="https://github.com/user-attachments/assets/ecff0c13-fd11-42ee-a770-0dd700d19380" />
+
 
 **2. Removing a Server**
 - Removing a server changes the server count.
@@ -88,3 +91,71 @@ Traditional hashing works well when the number of servers remains fixed. However
 ### Solution
 
 Consistent Hashing solves this problem by minimizing key redistribution when the server pool changes.
+
+
+
+## Consistent Hashing
+
+### Definition
+
+Consistent Hashing is a technique used to distribute data across multiple servers. It ensures that only a fraction of keys are remapped when servers are added or removed, minimizing data redistribution and improving scalability.
+
+### Key Concepts
+
+#### 1. Hash Space and Hash Ring
+<img width="1454" height="946" alt="image" src="https://github.com/user-attachments/assets/76fac7c8-df19-47f6-a218-ba63ac134a22" />
+
+
+- **Hash Space:** A range of possible hash values from `0` to `2^160 - 1`, when using a 160-bit hash function like SHA-1.
+- **Hash Ring:** A circular representation of the hash space, created by connecting both ends.
+- **Server Mapping:** Servers are mapped onto the ring using a hash function based on their IP addresses or names.
+<img width="1402" height="930" alt="image" src="https://github.com/user-attachments/assets/3b1dd74c-fd72-41e8-b4ea-17c2f29c2c45" />
+
+
+#### 2. Server Lookup
+<img width="1176" height="720" alt="image" src="https://github.com/user-attachments/assets/af2ba61a-1472-4485-a89e-e1f4881d50b1" />
+
+- Each data key is hashed to determine its position on the ring.
+- Starting from the key's position, the ring is traversed clockwise.
+- The first server encountered is responsible for storing that key.
+
+#### 3. Adding a Server
+
+- A new server's hash value is calculated.
+- The server is placed at its corresponding position on the ring.
+- Only affected keys are reassigned to the new server.
+- Other keys remain on their existing servers.
+
+#### 4. Removing a Server
+
+- The server is removed from the hash ring.
+- Its assigned keys are transferred to the next clockwise server.
+- Other keys generally remain unchanged.
+<img width="1452" height="1018" alt="image" src="https://github.com/user-attachments/assets/cc96247e-7c63-43a4-9bea-78f61f233016" />
+
+
+### Practical Example
+
+Consider three servers:
+
+- Server A = 100
+- Server B = 300
+- Server C = 500
+
+A new Server D is added with hash value `400`.
+
+Server D is placed between Server B and Server C because its hash value falls within that range.
+
+Only the affected keys are reassigned to Server D.
+
+### Key Benefits
+
+- Minimizes data redistribution.
+- Reduces cache misses.
+- Supports horizontal scaling.
+- Improves scalability in distributed systems.
+- Simplifies server addition and removal.
+
+### Summary
+
+Consistent Hashing distributes data across servers using a circular hash ring. It assigns keys to the next clockwise server and minimizes data movement when the server pool changes.
