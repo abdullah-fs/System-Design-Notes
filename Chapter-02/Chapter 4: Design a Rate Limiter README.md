@@ -228,3 +228,40 @@ Suppose the bucket capacity is 10 tokens and the refill rate is 2 tokens per sec
 
 #### Key Takeaway
 The Token Bucket algorithm allows temporary traffic bursts while maintaining an average request rate through a fixed token refill rate.
+
+
+
+### 2. Leaky Bucket Algorithm
+<img width="1458" height="458" alt="image" src="https://github.com/user-attachments/assets/957e9f08-8290-41b7-87b9-dacc3c32f35d" />
+
+
+#### Description
+The Leaky Bucket algorithm controls incoming traffic by processing requests at a fixed rate using a FIFO (First In, First Out) queue.
+
+- Incoming requests are stored in a queue.
+- Requests are processed in the order they arrive.
+- The system processes requests at a constant rate.
+- If the queue becomes full, new incoming requests are rejected.
+
+#### Working Example
+Suppose the queue capacity is 10 requests and the system processes 2 requests per second.
+
+- If 10 requests arrive simultaneously, they are stored in the queue.
+- The system processes 2 requests every second.
+- Additional requests are rejected if the queue is full.
+
+#### Advantages (Pros)
+- Memory-efficient because the queue has a fixed capacity.
+- Maintains a stable and predictable processing rate.
+- Prevents sudden traffic bursts from overwhelming the server.
+
+#### Disadvantages (Cons)
+- Traffic bursts can cause requests to wait in the queue.
+- New requests may be rejected when the queue is full.
+- Recent requests must wait for earlier requests to be processed.
+
+#### Real-World Example
+Uber's [uber-go/ratelimit](https://github.com/uber-go/ratelimit) is a Go rate-limiting library that provides leaky-bucket-style rate limiting.
+
+#### Key Takeaway
+The Leaky Bucket algorithm smooths incoming traffic by processing requests at a fixed rate, regardless of how quickly they arrive.
