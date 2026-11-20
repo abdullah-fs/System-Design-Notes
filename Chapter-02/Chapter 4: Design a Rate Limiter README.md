@@ -181,3 +181,50 @@ Rate limiting can be implemented at different layers of a system. The placement 
 - API Gateway offers centralized rate limiting for microservices.
 - Algorithm selection depends on business requirements.
 - Commercial solutions can save development time and resources.
+
+
+
+## Step 3: Rate Limiting Algorithms
+
+### 1. Token Bucket Algorithm
+<img width="1344" height="1112" alt="image" src="https://github.com/user-attachments/assets/1396be43-ce8c-456d-85ba-ef140ac685b7" />
+
+
+#### Description
+The Token Bucket algorithm controls incoming requests using a virtual bucket containing tokens.
+
+- Tokens are added to the bucket at a fixed rate.
+- Each incoming request consumes one token.
+- If a token is available, the request is allowed.
+- If no token is available, the request is rejected or delayed.
+- The bucket has a maximum capacity and cannot store extra tokens.
+
+#### Working Example
+Suppose the bucket capacity is 10 tokens and the refill rate is 2 tokens per second.
+
+- A user can send up to 10 requests immediately if the bucket is full.
+- Each request consumes one token.
+- Once all tokens are consumed, the user must wait for new tokens.
+
+#### Important Parameters
+
+**1. Bucket Size**
+- Defines the maximum number of tokens the bucket can hold.
+- Determines how many burst requests can be allowed.
+
+**2. Refill Rate**
+- Defines how many tokens are added per second or minute.
+- Controls the average request rate over time.
+
+#### Advantages (Pros)
+- Easy to implement.
+- Memory-efficient because it stores minimal information.
+- Supports temporary traffic bursts.
+- Provides flexible request handling.
+
+#### Disadvantages (Cons)
+- Bucket size and refill rate require careful configuration.
+- Incorrect settings may allow excessive traffic or restrict legitimate users.
+
+#### Key Takeaway
+The Token Bucket algorithm allows temporary traffic bursts while maintaining an average request rate through a fixed token refill rate.
