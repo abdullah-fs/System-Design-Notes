@@ -306,3 +306,47 @@ Suppose the rate limit is 100 requests per minute.
 #### Key Takeaway
 The Fixed Window Counter algorithm is simple and memory-efficient, but it can allow sudden traffic bursts at window boundaries.
 <img width="1372" height="622" alt="image" src="https://github.com/user-attachments/assets/38c25e61-4cf5-4cdb-b385-18b6b5e3a797" />
+
+
+
+### 4. Sliding Window Log Algorithm
+<img width="1276" height="898" alt="image" src="https://github.com/user-attachments/assets/11732e9e-272b-42cb-a6c7-d9e4035936c3" />
+
+
+#### Description
+The Sliding Window Log algorithm tracks the exact timestamp of each request to enforce rate limits over a rolling time window.
+
+- Each incoming request's timestamp is stored.
+- The system checks requests within the current time window.
+- Expired timestamps are removed.
+- Requests are allowed if the count is below the defined limit.
+- Otherwise, the request is rejected.
+
+#### Working Example
+Suppose the rate limit is 5 requests per minute.
+
+- Each request timestamp is recorded.
+- When a new request arrives, the system checks the previous 60 seconds.
+- If 5 requests already exist within that period, the new request is rejected.
+- Once an old request moves outside the window, a new request can be allowed.
+
+#### Advantages (Pros)
+- Provides accurate rate limiting.
+- Prevents the boundary burst problem of Fixed Window Counter.
+- Uses a rolling time window based on exact request timestamps.
+
+#### Disadvantages (Cons)
+- High memory consumption because every request timestamp must be stored.
+- Requires additional processing to check timestamps and remove expired entries.
+- Can become expensive in high-traffic systems.
+
+#### MERN Stack Example
+Redis Sorted Sets can store request timestamps.
+
+- Store each request timestamp.
+- Remove timestamps outside the current window.
+- Count remaining requests.
+- Allow or reject the incoming request based on the limit.
+
+#### Key Takeaway
+Sliding Window Log provides accurate rate limiting by tracking individual request timestamps, but it requires more memory and processing.
