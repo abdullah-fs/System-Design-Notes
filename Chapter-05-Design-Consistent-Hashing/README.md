@@ -318,3 +318,111 @@ Imagine a restaurant with three delivery riders: S0, S1, and S2.
 ## Summary
 
 Consistent Hashing minimizes data redistribution, supports horizontal scaling, and helps reduce server hotspots. It is an important technique used in distributed databases, content delivery networks, and load balancing systems.
+
+
+
+# Chapter 5: Design Consistent Hashing
+
+## Practical Example: Restaurant Delivery System
+
+Imagine a restaurant with multiple delivery riders. Customer orders are distributed among riders.
+
+| Restaurant | System Design |
+|---|---|
+| Restaurant | Application |
+| Delivery Riders | Servers |
+| Customer Orders | Data / Keys |
+| Order Assignment | Key Distribution |
+| New Rider | New Server |
+
+## 1. Introduction
+
+Consistent hashing distributes data across servers while minimizing data redistribution when servers are added or removed.
+
+## 2. The Rehashing Problem
+
+Traditional hashing uses:
+
+`serverIndex = hash(key) % N`
+
+When the number of servers changes, most keys may be reassigned.
+
+**Example:** When a new delivery rider joins, many customer orders may be assigned to different riders.
+
+**Problems:**
+- Unnecessary data redistribution.
+- Cache misses.
+- Increased system load.
+- Reduced performance.
+
+## 3. Consistent Hashing
+
+Consistent hashing ensures that only a fraction of keys are reassigned when servers are added or removed.
+
+### Hash Space and Ring
+
+- Hash space represents the range of possible hash values, such as `0` to `2^160 - 1` using SHA-1.
+- Connecting both ends of the hash space creates a Hash Ring.
+- Servers and keys are mapped onto the ring using the same hash function.
+
+### Server Lookup
+
+- Hash the key to determine its position on the ring.
+- Move clockwise from that position.
+- The first server encountered handles the key.
+
+**Example:** A customer order is assigned to the first delivery rider found clockwise on the ring.
+
+### Adding and Removing Servers
+
+**Adding a Server:**
+- A new server is added to the ring.
+- Only nearby keys are reassigned to the new server.
+
+**Removing a Server:**
+- The server is removed from the ring.
+- Its keys are reassigned to the next clockwise server.
+
+## 4. Challenges and Solutions
+
+### Challenges
+
+1. **Uneven Partition Sizes:** Some servers may receive larger portions of the hash ring.
+2. **Non-uniform Key Distribution:** Some servers may receive more keys or requests than others.
+
+### Solution: Virtual Nodes
+
+- Each physical server is represented by multiple virtual nodes on the ring.
+- Example: Server A → A1, A2, A3.
+- Virtual nodes improve key distribution and load balancing.
+- Increasing virtual nodes generally reduces standard deviation and improves distribution.
+
+**Restaurant Example:** Each delivery rider manages multiple delivery zones instead of just one, helping distribute orders more evenly.
+
+## 5. Affected Keys
+
+Affected keys are the keys whose server assignments change when a server is added or removed.
+
+**Adding a Server:**
+- Keys between the new server and its predecessor are reassigned to the new server.
+
+**Removing a Server:**
+- Keys belonging to the removed server are reassigned to the next clockwise server.
+
+## 6. Benefits of Consistent Hashing
+
+- **Minimized Redistribution:** Only a fraction of keys are reassigned.
+- **Scalability:** Supports horizontal scaling by allowing servers to be added or removed.
+- **Mitigates Hotspots:** Helps balance data distribution and reduce server overload.
+
+## 7. Real-World Applications
+
+1. **Amazon DynamoDB:** Uses consistent hashing concepts to distribute data across storage partitions.
+2. **Apache Cassandra:** Uses a token ring to distribute data across nodes.
+3. **Discord:** Uses consistent hashing techniques in parts of its distributed infrastructure.
+4. **Akamai CDN:** Uses hashing-based techniques to distribute and route content.
+5. **Maglev Load Balancer:** Uses consistent hashing to distribute traffic across backend servers.
+
+## Summary
+
+Consistent hashing minimizes data redistribution, supports horizontal scaling, and improves load balancing. Virtual nodes help achieve a more balanced distribution of data across servers.
