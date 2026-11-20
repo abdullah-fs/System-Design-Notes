@@ -445,3 +445,73 @@ Suppose a user is allowed 100 requests per minute.
 - Requests are checked before reaching the backend.
 - Allowed requests are processed; excessive requests are rejected.
 - HTTP 429 indicates that the rate limit has been exceeded.
+
+
+
+## Advanced Considerations
+
+### 1. Distributed Environments
+
+When an application runs on multiple servers, maintaining accurate request counters becomes challenging.
+
+#### Challenges
+
+**1. Race Conditions**
+- Multiple servers may read and update the same counter simultaneously.
+- This can result in incorrect request counts.
+- More requests than the allowed limit may be accepted.
+
+**2. Synchronization Issues**
+- Request counters must remain consistent across application servers.
+- Different counter values can cause inaccurate rate limiting.
+
+#### Solutions
+
+**1. Locks**
+- Locks control concurrent access to shared data.
+- They help prevent conflicting updates.
+
+**2. Redis Lua Scripts**
+- Lua scripts execute multiple Redis operations atomically.
+- Other requests cannot interfere between those operations.
+
+**3. Redis Sorted Sets**
+- Sorted Sets store values with associated scores.
+- They are useful for tracking request timestamps in the Sliding Window Log algorithm.
+
+**4. Centralized Data Store**
+- Multiple application servers use a shared Redis instance.
+- This allows request counters to be maintained centrally.
+
+### 2. Performance Optimizations
+
+#### 2.1 Multi-Data Center Setup
+- Deploy servers across multiple geographical locations.
+- Use nearby data stores to reduce request latency.
+- Synchronizing counters across data centers can be challenging.
+
+#### 2.2 Eventual Consistency
+- Data across distributed servers may not be synchronized immediately.
+- Updates become consistent after some time.
+- It can improve performance but may temporarily allow requests beyond strict limits.
+
+### 3. Monitoring
+
+Regular monitoring helps evaluate the effectiveness of a rate limiter and identify performance issues.
+
+Important metrics include:
+
+- **Allowed Requests:** Total requests accepted by the rate limiter.
+- **Rejected Requests:** Total requests blocked due to rate limits.
+- **Latency:** Time required to process rate-limiting checks.
+- **Error Rate:** Errors caused by Redis or rate-limiting components.
+
+Regular analytics help adjust rate-limiting rules and improve system performance.
+
+### 4. Key Takeaways
+- Distributed systems can face race conditions and synchronization issues.
+- Redis Lua scripts help perform atomic operations.
+- Centralized storage helps maintain shared request counters.
+- Multi-data center setups can reduce latency.
+- Eventual consistency improves scalability but may affect strict rate limits.
+- Monitoring helps maintain rate-limiter performance and effectiveness.
