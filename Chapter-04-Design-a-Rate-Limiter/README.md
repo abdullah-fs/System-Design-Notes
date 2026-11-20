@@ -265,3 +265,44 @@ Uber's [uber-go/ratelimit](https://github.com/uber-go/ratelimit) is a Go rate-li
 
 #### Key Takeaway
 The Leaky Bucket algorithm smooths incoming traffic by processing requests at a fixed rate, regardless of how quickly they arrive.
+
+
+
+### 3. Fixed Window Counter Algorithm
+<img width="1436" height="780" alt="image" src="https://github.com/user-attachments/assets/c753655d-59bf-41a3-9260-12ffc087366e" />
+
+#### Description
+The Fixed Window Counter algorithm divides time into fixed intervals and maintains a separate request counter for each interval.
+
+- A fixed time window is defined, such as one minute.
+- Each incoming request increments the counter.
+- Requests are allowed while the counter is within the defined limit.
+- Once the limit is reached, additional requests are rejected.
+- The counter resets when a new time window begins.
+
+#### Working Example
+Suppose the rate limit is 100 requests per minute.
+
+- From 10:00 to 10:01, a maximum of 100 requests are allowed.
+- At 10:01, the counter resets.
+- The next window allows another 100 requests.
+
+#### Advantages (Pros)
+- Simple and easy to implement.
+- Memory-efficient because it requires only a counter and window information.
+- Efficient request counting and limit checking.
+
+#### Disadvantages (Cons)
+
+**1. Boundary Burst Problem**
+- Traffic spikes can occur at the edges of consecutive time windows.
+- A user can send requests near the end of one window and immediately send more requests at the beginning of the next window.
+
+**Example:**
+- 100 requests are sent at 10:00:59.
+- Another 100 requests are sent at 10:01:00.
+- This allows 200 requests within a very short period, even though the limit is 100 requests per minute.
+
+#### Key Takeaway
+The Fixed Window Counter algorithm is simple and memory-efficient, but it can allow sudden traffic bursts at window boundaries.
+<img width="1372" height="622" alt="image" src="https://github.com/user-attachments/assets/38c25e61-4cf5-4cdb-b385-18b6b5e3a797" />
