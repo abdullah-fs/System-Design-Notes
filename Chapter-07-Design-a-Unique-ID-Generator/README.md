@@ -80,3 +80,37 @@ Imagine Facebook has millions of users creating posts simultaneously across mult
 - The system must generate thousands of IDs per second.
 
 A Unique ID Generator handles these requirements efficiently without relying on a single database's auto-increment mechanism.
+
+
+
+## 3. High-Level Design Options
+
+### 1. Multi-Master Replication
+
+**Approach:**
+- Uses multiple database servers with `auto_increment`.
+- Each server generates IDs using a different increment value (`+k`), where `k` is the number of servers.
+- This prevents ID conflicts between servers.
+<img width="952" height="472" alt="image" src="https://github.com/user-attachments/assets/384f8c5c-65da-48b1-8e14-5038d47c946f" />
+
+
+**Example:**
+
+For 3 database servers:
+
+```text
+Server 1 → 1, 4, 7, 10
+Server 2 → 2, 5, 8, 11
+Server 3 → 3, 6, 9, 12
+```
+
+Each server generates IDs with an increment of `+3`.
+
+**Drawbacks:**
+- **Scalability:** Difficult to scale across multiple data centers.
+- **Time Ordering:** IDs do not always increase according to creation time.
+- **Server Changes:** Adding or removing servers requires configuration changes and may cause ID conflicts.
+
+**Real-Life Example:**
+
+Facebook uses multiple database servers to handle posts. Managing different auto-increment sequences becomes difficult when servers are added or removed.
