@@ -173,3 +173,57 @@ Server 3 → Ticket Server → ID: 1003
 **Real-Life Example:**
 
 An e-commerce website has multiple servers processing orders. Each server requests a unique order ID from the Ticket Server before saving a new order.
+
+
+
+### 4. Twitter Snowflake Approach
+
+**Approach:**
+- Generates unique 64-bit numerical IDs.
+- Divides each ID into sections to ensure uniqueness and scalability.
+- Each machine can generate IDs independently.
+<img width="1252" height="970" alt="image" src="https://github.com/user-attachments/assets/d095af7f-9c6e-4128-b383-4ec9fda9e27b" />
+
+**64-bit ID Structure:**
+
+| Component | Bits | Purpose |
+|---|---:|---|
+| Sign Bit | 1 | Always `0` (positive ID) |
+| Timestamp | 41 | Milliseconds since a custom Epoch |
+| Datacenter ID | 5 | Supports 32 datacenters |
+| Machine ID | 5 | Supports 32 machines per datacenter |
+| Sequence Number | 12 | Supports 4096 IDs per millisecond |
+| **Total** | **64** | |
+
+**Components Explained:**
+
+1. **Sign Bit (1 bit):** Always `0` to keep IDs positive.
+
+2. **Timestamp (41 bits):** Stores milliseconds since a custom Epoch (Twitter's default: November 4, 2010). Makes IDs time-sortable.
+
+3. **Datacenter ID (5 bits):** Identifies up to \(2^5 = 32\) datacenters.
+
+4. **Machine ID (5 bits):** Identifies up to \(2^5 = 32\) machines per datacenter.
+
+5. **Sequence Number (12 bits):** Supports up to \(2^{12} = 4096\) IDs per millisecond on each machine. Resets to `0` every millisecond.
+
+**Example:**
+
+```text
+Datacenter 1, Machine 1 → Unique ID A
+Datacenter 1, Machine 2 → Unique ID B
+Datacenter 2, Machine 1 → Unique ID C
+```
+
+Different Datacenter IDs, Machine IDs, and Sequence Numbers help prevent duplicate IDs.
+
+**Advantages:**
+- **Scalability:** Handles 10,000+ IDs per second across multiple machines.
+- **Time Ordering:** IDs can be sorted by generation time.
+- **Decentralization:** No central ID server is required.
+
+**Real-Life Example:**
+
+Twitter has multiple datacenters and machines generating tweet IDs simultaneously. Snowflake combines timestamps, datacenter IDs, machine IDs, and sequence numbers to generate unique IDs independently.
+
+**Note:** Snowflake relies on accurate system clocks. Clock differences must be handled to prevent duplicate IDs and ordering issues.
