@@ -349,6 +349,8 @@ After S2 independently updates:
    - Y = `[0,1]`
 
 #### 3. Conflict Resolution
+<img width="1094" height="1148" alt="image" src="https://github.com/user-attachments/assets/bf5055e6-9d2e-43e2-8d02-6321d02782b1" />
+
 
 Conflict Resolution means resolving different versions of the same data and deciding the final correct value.
 
