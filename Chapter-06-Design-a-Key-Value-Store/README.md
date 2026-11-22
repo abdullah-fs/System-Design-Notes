@@ -235,6 +235,8 @@ Since two replicas acknowledge the write, the operation is successful.
 - The system waits for responses from at least two replicas.
 - N1 and N2 return the updated semester (4).
 - The latest successful update can be retrieved.
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/d260d4ba-6ff3-4c07-8286-bcf4d70feac4" />
+
 
 #### W, R, N Configurations
 
