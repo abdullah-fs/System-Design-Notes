@@ -500,3 +500,41 @@ If some records on N2 are outdated:
 - **Efficiency:** Only inconsistent data is synchronized.
 - **Scalability:** Efficiently compares large datasets.
 - **Reliability:** Helps restore consistency between replicas.
+
+
+
+### 6. Handling Data Center Outages
+
+- Replicate data across multiple data centers to maintain availability.
+- If one data center fails, another can serve requests.
+- Improves fault tolerance and reliability.
+
+**Example:** If Data Center A fails, users can access replicated data from Data Center B.
+
+---
+
+## Write and Read Paths
+
+### 1. Write Path (Cassandra Architecture)
+
+1. **Commit Log:** Records write operations first to support recovery after failures.
+2. **Memtable:** Stores data temporarily in memory (RAM).
+3. **SSTable:** When the Memtable becomes full, its data is flushed to disk as an immutable Sorted String Table.
+
+**Flow:** Write Request → Commit Log → Memtable → SSTable
+<img width="1200" height="706" alt="image" src="https://github.com/user-attachments/assets/10b6d4cc-dade-4fba-a669-5b1cb7d0a3ad" />
+
+
+### 2. Read Path
+
+1. **Memory Cache:** Checks whether the requested data is available in cache.
+2. **Bloom Filter:** If data is not in cache, checks which SSTables might contain the requested data.
+3. **SSTable:** Searches the possible SSTables, retrieves the data, and returns it.
+
+**Bloom Filter:**
+- Definitely Not Present: Data does not exist in that SSTable.
+- Possibly Present: Data may exist, so further searching is required.
+- It can produce false positives but not false negatives.
+
+**Flow:** Read Request → Memory Cache → Bloom Filter → SSTable → Return Data
+<img width="1587" height="814" alt="image" src="https://github.com/user-attachments/assets/0fd0e3ee-9405-47ff-98e8-009e1fff77d0" />
