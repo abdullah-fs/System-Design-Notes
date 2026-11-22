@@ -80,3 +80,44 @@ A mobile phone stores contacts using unique keys. A hash table can help quickly 
 ### Solution: Distributed Approach
 
 Use multiple servers to distribute data and requests, improving scalability and availability.
+
+
+
+## 3. CAP Theorem During Network Partition
+
+When a network partition occurs, distributed systems must choose between Consistency and Availability.
+
+### CP System
+
+- Prioritizes Consistency and Partition Tolerance.
+- Temporarily blocks or rejects some requests to prevent inconsistent data.
+- Availability is sacrificed during the partition.
+- Normal operations resume when the network connection is restored.
+
+### AP System
+
+- Prioritizes Availability and Partition Tolerance.
+- Continues accepting read and write requests during the partition.
+- May return stale or inconsistent data temporarily.
+- Data can synchronize after the network connection is restored.
+
+### Example: Banking System
+
+Imagine three servers storing a bank balance:
+
+- N1: Rs. 8,000
+- N2: Rs. 8,000
+- N3: Rs. 10,000
+
+If N3 becomes disconnected:
+
+- **CP:** Blocks some requests to prevent incorrect balance information.
+- **AP:** Continues accepting requests, even if some servers return outdated balances.
+
+### Important Point
+
+The sacrifice is often temporary. Once the network partition is resolved, the system can return to normal operation.
+
+**Key Takeaway:** During a network partition, a distributed system must prioritize either Consistency or Availability while maintaining Partition Tolerance.
+<img width="1384" height="1106" alt="image" src="https://github.com/user-attachments/assets/720aaec7-e480-4b5e-962f-e60388234ef2" />
+<img width="1256" height="1014" alt="image" src="https://github.com/user-attachments/assets/1c399032-5141-46d6-920d-ec1ed80586a4" />
