@@ -144,3 +144,32 @@ Server 3 → 3f2504e0-4f89-11d3-9a0c-0305e82c3301
 **Real-Life Example:**
 
 An e-commerce application uses multiple servers to process orders. Each server independently generates a UUID for every order without coordinating with other servers.
+
+
+
+### 3. Ticket Server
+
+**Approach:**
+- Uses a centralized database server to generate unique IDs.
+- Application servers request IDs from the Ticket Server.
+- The Ticket Server increments a counter and returns a new ID.
+<img width="1202" height="450" alt="image" src="https://github.com/user-attachments/assets/83cd6b20-61d5-466f-8c99-d9aef5c1b0a4" />
+
+**Example:**
+```text
+Server 1 → Ticket Server → ID: 1001
+Server 2 → Ticket Server → ID: 1002
+Server 3 → Ticket Server → ID: 1003
+```
+
+**Advantages:**
+- **Simple Implementation:** Easy to implement for small-scale systems.
+- **Numeric IDs:** Generates simple numerical IDs.
+
+**Drawbacks:**
+- **Single Point of Failure:** If the Ticket Server goes down, ID generation stops.
+- **Synchronization Challenges:** Multiple servers must coordinate with the central server, creating a potential bottleneck.
+
+**Real-Life Example:**
+
+An e-commerce website has multiple servers processing orders. Each server requests a unique order ID from the Ticket Server before saving a new order.
