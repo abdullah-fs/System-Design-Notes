@@ -147,3 +147,41 @@ Data Partitioning divides large amounts of data across multiple servers to impro
    - The number of virtual nodes is proportional to server capacity.
 
 **Example:** A server with 32 GB RAM can have more virtual nodes than a server with 8 GB RAM, allowing it to handle more data.
+
+
+### 2. Data Replication
+
+Data Replication means storing multiple copies of the same data across different servers to improve high availability and fault tolerance.
+
+**Replication Across N Servers**
+
+- Data is replicated across `N` servers.
+- `N` represents the replication factor.
+- If one server fails, data can still be accessed from other replicas.
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/63976b8c-eeb9-4af0-a4f9-882b080823e0" />
+
+
+**Server Selection Using Consistent Hashing**
+
+1. Hash the data key to find its position on the hash ring.
+2. Move clockwise from that position.
+3. Select the first `N` distinct physical servers.
+4. Store replicas on those servers.
+
+**Data Center Replication**
+
+- Place replicas across different data centers.
+- If one data center fails, other data centers can still provide access to the data.
+- Improves reliability and fault tolerance.
+
+**Daily Life Example: University Database**
+
+Imagine a university stores student records across three servers:
+
+- Server N1: Main copy of student records.
+- Server N2: Replica copy.
+- Server N3: Replica copy.
+
+If N1 fails, the university can retrieve student records from N2 or N3.
+
+If these servers are located in different data centers, the data can remain available even if an entire data center fails.
