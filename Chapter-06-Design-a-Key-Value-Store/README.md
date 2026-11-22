@@ -355,6 +355,9 @@ Conflict Resolution means resolving different versions of the same data and deci
 **Example: University Database**
 
 Imagine two servers update Abdullah's name simultaneously:
+<img width="1090" height="638" alt="image" src="https://github.com/user-attachments/assets/b977bf18-ee95-4d61-a106-24d6ae3a3f58" />
+<img width="1128" height="520" alt="image" src="https://github.com/user-attachments/assets/67e53fb4-a000-45a9-8ecc-2b9ef965c33f" />
+
 
 - Server 1: Abdullah → Ahmad (V1).
 - Server 2: Abdullah → Ali (V2).
