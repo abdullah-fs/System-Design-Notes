@@ -239,6 +239,8 @@ Since two replicas acknowledge the write, the operation is successful.
 
 
 #### W, R, N Configurations
+<img width="1114" height="950" alt="image" src="https://github.com/user-attachments/assets/4b7371e0-a73c-4013-a475-8e307c8024da" />
+
 
 - **R = 1, W = N:** Optimized for fast reads.
 - **W = 1, R = N:** Optimized for fast writes.
