@@ -538,3 +538,27 @@ If some records on N2 are outdated:
 
 **Flow:** Read Request → Memory Cache → Bloom Filter → SSTable → Return Data
 <img width="1587" height="814" alt="image" src="https://github.com/user-attachments/assets/0fd0e3ee-9405-47ff-98e8-009e1fff77d0" />
+
+
+
+## Final Architecture
+<img width="1408" height="800" alt="image" src="https://github.com/user-attachments/assets/81655cae-fb2f-41c9-8c17-0d522cc70cfd" />
+
+
+The key-value store combines multiple components to provide scalability, availability, and fault tolerance.
+
+### Main Components
+
+1. **Client APIs:** Clients interact with the store using `get(key)` and `put(key, value)`.
+2. **Coordinator:** Acts as a proxy between clients and storage nodes, routing requests to the appropriate nodes.
+3. **Consistent Hashing:** Distributes nodes across a hash ring and determines where data is stored.
+4. **Decentralized Architecture:** All nodes have equal responsibilities, allowing automatic node addition and removal.
+5. **Data Replication:** Stores copies of data across multiple nodes for fault tolerance.
+6. **No Single Point of Failure:** Failure of one node does not bring down the entire system.
+
+### Key Benefits
+
+- High availability
+- Horizontal scalability
+- Fault tolerance
+- Decentralized operation
