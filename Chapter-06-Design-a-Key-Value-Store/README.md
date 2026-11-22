@@ -185,3 +185,78 @@ Imagine a university stores student records across three servers:
 If N1 fails, the university can retrieve student records from N2 or N3.
 
 If these servers are located in different data centers, the data can remain available even if an entire data center fails.
+
+
+
+### 3. Consistency
+
+Since data is replicated across multiple nodes, replicas must be synchronized to maintain data consistency.
+
+#### Quorum Consensus
+
+Quorum Consensus determines how many replicas must respond successfully for read and write operations.
+
+**Three Important Values:**
+
+- **N (Total Replicas):** Total number of data copies.
+- **W (Write Quorum):** Minimum number of replicas that must acknowledge a write operation.
+- **R (Read Quorum):** Minimum number of replicas that must respond to a read operation.
+
+**Main Rule:**
+
+`W + R > N`
+
+This ensures quorum intersection and supports strong consistency under standard quorum assumptions.
+
+#### Example: University Database
+
+Imagine a university stores student records across three replicas:
+
+- N1
+- N2
+- N3
+
+Configuration:
+
+`N = 3, W = 2, R = 2`
+
+**Write Operation:**
+
+If Abdullah's semester is updated from 3 to 4:
+
+- N1 receives the update.
+- N2 receives the update.
+- N3 is temporarily not updated.
+
+Since two replicas acknowledge the write, the operation is successful.
+
+**Read Operation:**
+
+- The system waits for responses from at least two replicas.
+- N1 and N2 return the updated semester (4).
+- The latest successful update can be retrieved.
+
+#### W, R, N Configurations
+
+- **R = 1, W = N:** Optimized for fast reads.
+- **W = 1, R = N:** Optimized for fast writes.
+- **W + R > N:** Strong consistency supported.
+- **W + R ≤ N:** Strong consistency is not guaranteed.
+
+Usually, `N = 3, W = 2, R = 2` is a common configuration.
+
+#### Consistency Models
+
+**1. Strong Consistency**
+- Every read returns the value of the latest successful write.
+- All clients see the latest committed data.
+
+**2. Weak Consistency**
+- Read operations may return outdated values.
+- Latest updates are not guaranteed to be immediately visible.
+
+**3. Eventual Consistency**
+- Replicas may temporarily contain different values.
+- Given enough time without new updates, all replicas eventually become consistent.
+
+**Example:** When a university updates a student's semester on N1, N2 and N3 may temporarily have old data. Eventually, all replicas receive the update.
