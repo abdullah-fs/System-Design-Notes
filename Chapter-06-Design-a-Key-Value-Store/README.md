@@ -121,3 +121,29 @@ The sacrifice is often temporary. Once the network partition is resolved, the sy
 **Key Takeaway:** During a network partition, a distributed system must prioritize either Consistency or Availability while maintaining Partition Tolerance.
 <img width="1384" height="1106" alt="image" src="https://github.com/user-attachments/assets/720aaec7-e480-4b5e-962f-e60388234ef2" />
 <img width="1256" height="1014" alt="image" src="https://github.com/user-attachments/assets/1c399032-5141-46d6-920d-ec1ed80586a4" />
+
+
+
+## 4. System Components
+
+### 1. Data Partitioning
+
+Data Partitioning divides large amounts of data across multiple servers to improve scalability and performance.
+
+**Technique: Consistent Hashing**
+
+- Uses consistent hashing to distribute data across multiple servers.
+- Each key is mapped to a server using a hash function.
+- Helps minimize data redistribution when servers are added or removed.
+<img width="1923" height="1353" alt="image" src="https://github.com/user-attachments/assets/e4971118-bbba-4373-96d8-4c26ed95514d" />
+
+
+### Advantages
+
+1. **Automatic Scaling:** New servers can be added and existing servers removed with minimal data redistribution.
+2. **Heterogeneity:** Supports servers with different capacities using virtual nodes.
+   - Powerful servers receive more virtual nodes.
+   - Less powerful servers receive fewer virtual nodes.
+   - The number of virtual nodes is proportional to server capacity.
+
+**Example:** A server with 32 GB RAM can have more virtual nodes than a server with 8 GB RAM, allowing it to handle more data.
