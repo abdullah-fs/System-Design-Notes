@@ -114,3 +114,33 @@ Each server generates IDs with an increment of `+3`.
 **Real-Life Example:**
 
 Facebook uses multiple database servers to handle posts. Managing different auto-increment sequences becomes difficult when servers are added or removed.
+
+
+
+### 2. UUID (Universally Unique Identifier)
+
+**Approach:**
+- Generates 128-bit unique identifiers independently on each server.
+- No coordination between servers is required.
+<img width="1192" height="324" alt="image" src="https://github.com/user-attachments/assets/e8b0736c-43fe-4007-b898-240b887c8773" />
+
+
+**Example:**
+```text
+Server 1 → 550e8400-e29b-41d4-a716-446655440000
+Server 2 → 6ba7b810-9dad-11d1-80b4-00c04fd430c8
+Server 3 → 3f2504e0-4f89-11d3-9a0c-0305e82c3301
+```
+
+**Advantages:**
+- **No Coordination:** Servers can generate UUIDs independently.
+- **Easy Scalability:** New servers can be added without changing ID generation logic.
+
+**Drawbacks:**
+- **128-bit Size:** Exceeds the required 64-bit limit.
+- **Not Time-Sortable:** Traditional UUIDs (e.g., UUID v4) are not ordered by creation time.
+- **Non-Numeric Format:** UUIDs use hexadecimal characters and hyphens.
+
+**Real-Life Example:**
+
+An e-commerce application uses multiple servers to process orders. Each server independently generates a UUID for every order without coordinating with other servers.
