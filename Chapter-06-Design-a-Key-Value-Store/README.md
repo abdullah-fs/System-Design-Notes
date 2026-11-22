@@ -384,3 +384,119 @@ Now both servers have different values, creating a conflict.
 - **Client Complexity:** Clients must handle multiple versions and resolve conflicts.
 - **Vector Clock Size:** Vector clocks can grow with many servers and updates.
 - **Trimming:** Old entries may need to be removed to control vector clock size.
+
+
+
+### 5. Handling Failures
+
+Distributed systems must handle server failures to maintain availability and data consistency.
+
+Failure handling has three main parts:
+
+#### A. Failure Detection
+
+Failure Detection identifies whether a server is offline or not responding.
+
+- A server should not be declared down based on only one server's report.
+- Usually, at least two independent sources of information are required.
+
+**Gossip Protocol**
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/6152cc9d-ae69-47a4-9278-f08e0de14cb7" />
+
+
+Gossip Protocol allows nodes to periodically share health information with randomly selected nodes.
+
+**Working:**
+1. Each node maintains member IDs and heartbeat counters.
+2. Each node periodically increments its heartbeat counter.
+3. Nodes send heartbeat information to randomly selected nodes.
+4. If a heartbeat does not increase for a predefined period, the node is suspected of being offline.
+
+**Example: University Database**
+
+If N3 stops sending heartbeats, N1 and N2 exchange health information. After sufficient evidence, N3 can be marked as offline.
+
+#### B. Temporary Failures
+
+Temporary failures occur when a server becomes unavailable for some time but may recover later.
+
+**1. Sloppy Quorum**
+<img width="1400" height="513" alt="image" src="https://github.com/user-attachments/assets/3c85fe84-8309-498a-ac7c-2cd2008c22d6" />
+
+
+Sloppy Quorum maintains availability by using healthy alternative servers when the preferred replicas are unavailable.
+
+**Working:**
+- Offline servers are temporarily ignored.
+- The first `W` healthy servers are selected for writes.
+- The first `R` healthy servers are selected for reads.
+- Alternative servers temporarily handle requests.
+
+**Example:**
+
+If N2 is offline and `W = 2`, the system can use N1 and N3 to complete a write operation.
+
+**2. Hinted Handoff**
+
+Hinted Handoff temporarily stores updates intended for an unavailable server on another healthy server.
+
+**Working:**
+1. A server goes offline.
+2. Another healthy server temporarily stores its pending updates.
+3. The failed server recovers.
+4. Pending updates are transferred back to the recovered server.
+
+**Example:** If university server N2 goes offline, N1 temporarily stores updates intended for N2 and transfers them when N2 recovers.
+
+#### C. Permanent Failures
+
+Permanent failures occur when a server permanently fails or loses its data.
+
+**Merkle Trees**
+<img width="1400" height="739" alt="image" src="https://github.com/user-attachments/assets/8f06db49-0909-4d31-bbda-4503435aa32c" />
+
+
+A Merkle Tree is a hash-based data structure used to efficiently detect differences between replicas and synchronize inconsistent data.
+
+**Structure:**
+- **Leaf Nodes:** Store hashes of individual data blocks or buckets.
+- **Non-Leaf Nodes:** Store hashes of their child nodes.
+- **Root Hash:** Represents the combined state of the dataset.
+
+**Building a Merkle Tree:**
+
+1. **Divide Key Space:** Divide database keys into buckets.
+<img width="1496" height="976" alt="image" src="https://github.com/user-attachments/assets/0485b658-c75e-46a7-bcd1-f2d51ddbcee0" />
+
+3. **Hash Each Key:** Calculate hashes for individual keys and their associated data.
+<img width="906" height="580" alt="image" src="https://github.com/user-attachments/assets/56eb87a4-089c-49b9-b195-0ba3ba16faed" />
+
+5. **Create Bucket Hashes:** Combine the hashes within each bucket to generate a single bucket hash.
+<img width="1400" height="1027" alt="image" src="https://github.com/user-attachments/assets/bfe87c22-fe35-43f2-b3c0-31e1ef05358b" />
+
+7. **Build the Tree:** Combine bucket hashes into higher-level hashes until a root hash is generated.
+<img width="1112" height="712" alt="image" src="https://github.com/user-attachments/assets/e260a407-fb71-47ac-aea8-a66df61e9197" />
+
+**Synchronization Between Replicas:**
+
+1. Compare the root hashes of both replicas.
+2. If root hashes match, their represented data is consistent.
+3. If root hashes differ, compare child hashes recursively.
+4. Identify the buckets containing inconsistent data.
+5. Synchronize only the inconsistent data.
+
+**Example: University Database**
+
+Imagine N1 and N2 store 10,000 student records.
+
+If some records on N2 are outdated:
+- Compare both Merkle Trees.
+- Identify different root and child hashes.
+- Find the buckets containing outdated records.
+- Transfer only the inconsistent student records instead of all 10,000 records.
+
+**Advantages:**
+
+- **Efficiency:** Only inconsistent data is synchronized.
+- **Scalability:** Efficiently compares large datasets.
+- **Reliability:** Helps restore consistency between replicas.
