@@ -76,6 +76,8 @@ Just like a librarian discovers books, collects information, and organizes them 
 # Step 1: Understanding the Problem
 
 ## Requirements
+<img width="1510" height="1094" alt="image" src="https://github.com/user-attachments/assets/14380c69-4eb2-4fb7-90af-f1ede99bbf39" />
+
 
 1. **Crawl 1 Billion Web Pages per Month**
    - Average: 400 pages/second.
@@ -104,3 +106,147 @@ Just like a librarian discovers books, collects information, and organizes them 
 - Detecting new and updated pages.
 - Duplicate content detection.
 - Managing massive storage for 5 years.
+
+
+
+## How Does a Web Crawler Discover New Websites?
+
+A Web Crawler discovers new websites and pages through different sources:
+
+1. **Existing Website Links**
+   - Crawlers extract links from already crawled web pages.
+   - New URLs are added to the URL Frontier for crawling.
+
+2. **Sitemaps**
+   - Websites provide `sitemap.xml` files containing their URLs.
+   - Crawlers use sitemaps to discover new pages.
+
+3. **Seed URLs**
+   - Search engines provide initial URLs to start crawling.
+   - Crawlers follow links from these URLs to discover more websites.
+
+4. **Website Submissions**
+   - Website owners can submit their websites to search engines for discovery.
+
+**Example:** If a crawler visits `example.com` and finds a link to `newwebsite.com`, it can add that URL to the URL Frontier and crawl it later.
+
+**Key Point:** Crawlers discover new websites mainly by following links from existing websites and reading sitemaps.
+
+
+# Step 3: Deep Dive into Key Components
+
+## 1. DFS vs BFS
+
+<img width="2000" height="1120" alt="image" src="https://github.com/user-attachments/assets/75f2b8b0-c347-4749-8c0b-988230d8ee14" />
+
+
+The web can be represented as a directed graph:
+- **Nodes:** Web pages.
+- **Edges:** Hyperlinks between pages.
+
+**DFS (Depth-First Search):**
+- Explores deeply along one path before backtracking.
+- Not ideal for web crawling because web depth can be very large.
+
+**BFS (Breadth-First Search):**
+- Visits pages level by level.
+- Usually preferred for web crawling.
+
+**Limitation:** Standard BFS does not consider URL priority; all pages are treated equally.
+
+## 2. URL Frontier
+
+URL Frontier manages which URLs should be downloaded and when.
+
+### A. Politeness
+<img width="817" height="362" alt="image" src="https://github.com/user-attachments/assets/f8a4a1aa-76a3-4a0f-9225-a6f454bf237e" />
+
+Ensures the crawler does not overload websites.
+
+- Send only one request per host at a time.
+- Add delays between requests.
+- Use separate queues for different hosts.
+
+**Components:**
+1. **Queue Router:** Routes URLs to queues based on hostname.
+2. **Mapping Table:** Maps each hostname to a queue.
+3. **Queue Selector:** Assigns queues to worker threads.
+4. **Worker Threads:** Download URLs sequentially from their assigned queues.
+
+### B. Priority
+<img width="1669" height="880" alt="image" src="https://github.com/user-attachments/assets/d88ecb7d-280e-408f-8106-11045f7ef7c8" />
+
+
+Assigns higher priority to important pages.
+
+- **Prioritizer:** Calculates URL priorities.
+- **Front Queues:** Organize URLs by priority.
+- **Queue Selector:** Selects higher-priority queues more frequently.
+- **Back Queues:** Manage host-based queues for politeness.
+
+Priority factors:
+- PageRank
+- Page importance
+- Update frequency
+
+### C. Freshness
+
+Determines when pages should be crawled again.
+
+- Frequently updated pages are recrawled more often.
+- Rarely updated pages are recrawled less frequently.
+- Page importance also affects recrawling frequency.
+
+## 3. HTML Downloader
+
+Downloads web pages from URLs provided by the URL Frontier.
+
+**Robots.txt Compliance:**
+- Respect website crawling rules defined in `robots.txt`.
+
+**Performance Optimizations:**
+1. **Distributed Crawling:** Use multiple servers to increase crawling speed.
+2. **DNS Cache:** Avoid repeated DNS lookups.
+3. **Geographical Distribution:** Place crawler servers in different locations for faster downloads.
+4. **Short Timeout:** Avoid waiting too long for unresponsive servers.
+
+## 4. Robustness
+
+Ensures the crawler continues working despite errors and failures.
+
+1. **Consistent Hashing:** Distributes load among servers.
+2. **Error Handling:** Handles exceptions and download failures.
+3. **Data Validation:** Ensures content integrity and correctness.
+
+## 5. Extensibility
+<img width="617" height="423" alt="image" src="https://github.com/user-attachments/assets/362901cd-18fc-49bf-800a-3f7575d4d5f5" />
+
+
+Allows adding new features or modules without changing the entire system.
+
+Examples:
+- PNG Downloader
+- Web Monitor
+- Copyright Violation Detector
+
+## 6. Avoiding Problematic Content
+
+1. **Duplicate Content:** Detect duplicates using hash comparisons.
+2. **Spider Traps:** Avoid infinite crawling loops using URL length limits and crawling limits.
+3. **Data Noise:** Filter irrelevant content such as advertisements and spam.
+
+## Quick Revision
+
+| Concept | Purpose |
+|---|---|
+| BFS | Crawl pages level by level |
+| DFS | Explore deeply along one path |
+| Politeness | Avoid overloading websites |
+| Priority | Crawl important pages first |
+| Freshness | Recrawl updated pages |
+| Robots.txt | Follow website crawling rules |
+| DNS Cache | Reduce repeated DNS lookups |
+| Robustness | Handle failures and errors |
+| Extensibility | Add new modules easily |
+| Spider Traps | Prevent infinite crawling |
+| Data Noise | Remove irrelevant content |
