@@ -304,3 +304,84 @@ google.com + salt → xyz789p (Unique)
 - **Collision:** Occurs when different URLs generate the same short code.
 - **Bloom Filter:** Helps identify possible existing codes efficiently.
 - **Security Concern:** Sequential IDs can make short URLs predictable.
+
+
+
+### 4. URL Shortening Flow
+
+1. Check whether the `longURL` already exists in the database.
+2. If found, return the existing `shortURL`.
+3. Otherwise:
+   - Generate a unique ID using a **Distributed ID Generator**.
+   - Convert the ID into a short code using **Base 62**.
+   - Store the `<id, shortURL, longURL>` mapping in the database.
+4. Return the generated short URL to the user.
+
+**Flow:**
+
+```text
+Long URL
+   |
+   v
+Check Database
+   |
+   +---- Found ----> Return Existing Short URL
+   |
+   +---- Not Found
+          |
+          v
+   Generate Unique ID
+          |
+          v
+    Base 62 Conversion
+          |
+          v
+    Generate Short URL
+          |
+          v
+    Store in Database
+          |
+          v
+    Return Short URL
+```
+
+### 5. URL Redirecting Flow
+
+1. User clicks a `shortURL`.
+2. Search for the corresponding original URL:
+   - Check the **Cache** first for faster access.
+   - If not found, query the database.
+3. Retrieve the original `longURL`.
+4. Redirect the user to the original URL.
+
+**Flow:**
+
+```text
+User Clicks Short URL
+         |
+         v
+     Check Cache
+         |
+    +----+----+
+    |         |
+  Found    Not Found
+    |         |
+    |         v
+    |    Query Database
+    |         |
+    +----+----+
+         |
+         v
+  Retrieve Original URL
+         |
+         v
+   Redirect to Website
+```
+
+**Key Points:**
+
+- **Cache Hit:** URL is found in cache, resulting in a faster response.
+- **Cache Miss:** URL is not found in cache, so the database is queried.
+- **Distributed ID Generator:** Generates unique IDs across multiple servers.
+- **Base 62:** Converts numerical IDs into short alphanumeric codes.
+- **Redis:** Can be used as a cache for frequently accessed URLs.
