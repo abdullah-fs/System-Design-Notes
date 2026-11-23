@@ -111,6 +111,8 @@ Example Response:
 ```
 
 **B. URL Redirecting**
+<img width="1312" height="626" alt="image" src="https://github.com/user-attachments/assets/13a1753d-fa6f-40d8-bc25-3498f353873e" />
+
 
 - **Method:** GET
 - **Endpoint:** `/{shortUrl}`
@@ -147,6 +149,8 @@ HTTP provides two common redirect status codes:
 - Useful for click tracking and analytics.
 
 ### 3. URL Shortening
+<img width="734" height="520" alt="image" src="https://github.com/user-attachments/assets/12ecebde-81b1-4c1f-ae67-f7b9e1fc9b88" />
+
 
 A **Hash Function** is used to generate a short code from a long URL.
 
@@ -187,6 +191,8 @@ Short URL: tinyurl.com/abc123
 ## Step 2: Deep Dive into Design
 
 ### 1. Data Model
+<img width="488" height="390" alt="image" src="https://github.com/user-attachments/assets/17832c0d-7824-46ba-90c4-82956ff1c3bc" />
+
 
 Store `<shortURL, longURL>` mappings in a relational database to efficiently manage URL records.
 
@@ -265,6 +271,8 @@ Short URL: tinyurl.com/zn9edcu
 \]
 
 #### 2. Hash + Collision Resolution
+<img width="1032" height="368" alt="image" src="https://github.com/user-attachments/assets/fe47f317-0b15-42cd-9365-461c8615b51d" />
+
 
 - Apply hash functions such as CRC32, MD5, or SHA-1 to the original URL.
 - Use the first 7 characters of the generated hash as the short code.
@@ -287,6 +295,8 @@ Second Attempt:
 google.com + salt → xyz789p (Unique)
 ```
 
+<img width="1358" height="804" alt="image" src="https://github.com/user-attachments/assets/bd068eb9-73d8-4e3e-be59-29877a8a94a2" />
+
 ### 3. Comparison: Base 62 vs Hash + Collision Resolution
 
 | Feature | Hash + Collision | Base 62 |
@@ -308,6 +318,8 @@ google.com + salt → xyz789p (Unique)
 
 
 ### 4. URL Shortening Flow
+<img width="1168" height="874" alt="image" src="https://github.com/user-attachments/assets/84f31a6d-5780-4c17-a662-042ebbc666f6" />
+
 
 1. Check whether the `longURL` already exists in the database.
 2. If found, return the existing `shortURL`.
@@ -346,6 +358,8 @@ Check Database
 ```
 
 ### 5. URL Redirecting Flow
+<img width="1366" height="418" alt="image" src="https://github.com/user-attachments/assets/4d180035-6548-46a0-ae37-5ced70e6d9fc" />
+
 
 1. User clicks a `shortURL`.
 2. Search for the corresponding original URL:
