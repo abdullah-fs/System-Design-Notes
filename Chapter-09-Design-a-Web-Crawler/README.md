@@ -70,3 +70,37 @@ Just like a librarian discovers books, collects information, and organizes them 
 | Robustness | Handle errors and failures |
 | Politeness | Avoid overloading websites |
 | Extensibility | Support new features easily |
+
+
+
+# Step 1: Understanding the Problem
+
+## Requirements
+
+1. **Crawl 1 Billion Web Pages per Month**
+   - Average: 400 pages/second.
+   - Peak: 800 QPS (Queries Per Second).
+
+2. **Collect HTML-Only Content**
+   - Collect HTML content, including page structure and text.
+   - Ignore images, videos, and other media files.
+
+3. **Track New and Updated Pages**
+   - Discover new web pages.
+   - Detect changes in existing pages and crawl them again.
+
+4. **Ignore Duplicate Content**
+   - Identify identical content across different URLs.
+   - Avoid storing duplicate data.
+   - Use content hashing for duplicate detection.
+
+5. **Store Crawled Data for 5 Years**
+   - Estimated storage: approximately 30 PB.
+   - Requires a distributed storage system.
+
+## Key Challenges
+
+- High crawling speed and scalability.
+- Detecting new and updated pages.
+- Duplicate content detection.
+- Managing massive storage for 5 years.
