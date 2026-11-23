@@ -78,3 +78,106 @@ Therefore, approximately **365 TB of storage** will be required.
 | pqr456 | youtube.com |
 
 *Note: Actual storage requirements depend on record size and database overhead.*
+
+
+
+## Step 1: High-Level Design
+
+### 1. API Endpoints
+
+The URL Shortener system uses two main API endpoints.
+
+**A. URL Shortening**
+
+- **Method:** POST
+- **Endpoint:** `/api/v1/data/shorten`
+- **Parameter:** `longUrl`
+- **Purpose:** Converts a long URL into a short URL.
+
+Example Request:
+
+```json
+{
+  "longUrl": "https://www.amazon.com/products/samsung-galaxy-s25"
+}
+```
+
+Example Response:
+
+```json
+{
+  "shortURL": "https://tinyurl.com/abc123"
+}
+```
+
+**B. URL Redirecting**
+
+- **Method:** GET
+- **Endpoint:** `/{shortUrl}`
+- **Purpose:** Retrieves the original URL and redirects the user to it.
+
+Example:
+
+```text
+tinyurl.com/abc123
+        |
+        v
+Find original URL in database
+        |
+        v
+Redirect to original website
+```
+
+### 2. URL Redirection
+
+HTTP provides two common redirect status codes:
+
+**A. 301 Redirect (Permanent)**
+
+- Indicates that the URL has permanently moved.
+- Browsers can cache the redirect response.
+- Subsequent requests may bypass the URL Shortener server.
+- Makes click tracking less reliable.
+
+**B. 302 Redirect (Temporary)**
+
+- Indicates a temporary redirect.
+- Browsers generally do not cache it like a permanent redirect.
+- Requests can reach the URL Shortener server again.
+- Useful for click tracking and analytics.
+
+### 3. URL Shortening
+
+A **Hash Function** is used to generate a short code from a long URL.
+
+Example:
+
+```text
+Long URL
+   |
+   v
+Hash Function
+   |
+   v
+Hash Value: abc123
+   |
+   v
+Short URL: tinyurl.com/abc123
+```
+
+**Hash Function Requirements:**
+
+1. **Consistent Mapping:** Each long URL should generate a consistent hash value when using a deterministic approach.
+
+2. **Unique Mapping:** Different long URLs must not generate the same hash value. Hash collisions must be handled.
+
+3. **Reverse Lookup:** The original URL must be retrievable using the generated hash value through a database mapping.
+
+**Example Database Mapping:**
+
+| Short Code | Original URL |
+|---|---|
+| abc123 | google.com |
+| xyz789 | facebook.com |
+
+**Important:** Hash functions are not reversible. The original URL is retrieved through database mapping, not by reversing the hash.
