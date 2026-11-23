@@ -181,3 +181,126 @@ Short URL: tinyurl.com/abc123
 | xyz789 | facebook.com |
 
 **Important:** Hash functions are not reversible. The original URL is retrieved through database mapping, not by reversing the hash.
+
+
+
+## Step 2: Deep Dive into Design
+
+### 1. Data Model
+
+Store `<shortURL, longURL>` mappings in a relational database to efficiently manage URL records.
+
+**Database Table: `urls`**
+
+| Column | Description |
+|---|---|
+| `id` | Primary key for unique record identification. |
+| `shortURL` | Generated short URL or short code. |
+| `longURL` | Original long URL. |
+
+**Example:**
+
+| id | shortURL | longURL |
+|---|---|---|
+| 1 | abc123 | google.com |
+| 2 | xyz789 | facebook.com |
+| 3 | pqr456 | youtube.com |
+
+### Table Schema
+
+```sql
+CREATE TABLE urls (
+    id BIGINT PRIMARY KEY,
+    shortURL VARCHAR(20) UNIQUE,
+    longURL TEXT
+);
+```
+
+**Key Points:**
+
+- **Primary Key:** Uniquely identifies each database record.
+- **Unique Constraint:** Ensures every short URL is unique.
+- **Indexing:** Helps retrieve URL mappings efficiently.
+- **Relational Database:** Stores structured URL mappings and supports efficient lookups.
+
+**MERN Stack Example:**
+
+In MongoDB, the same mapping can be stored as:
+
+```js
+{
+  shortURL: "abc123",
+  longURL: "https://www.google.com"
+}
+```
+
+A unique index can be created on `shortURL` to prevent duplicate short codes.
+
+
+
+### 2. Hash Function
+
+A hash function is used to generate short codes for long URLs. There are two common approaches:
+
+#### 1. Base 62 Conversion
+
+- Encodes numbers using 62 characters: `[0-9, a-z, A-Z]`.
+- Assign a unique ID to each URL and convert it into Base 62.
+- The converted value becomes the short URL.
+- A 7-character code supports approximately 3.5 trillion unique combinations.
+
+**Example:**
+
+```text
+Unique ID: 2009215674938
+Base 62:   zn9edcu
+
+Short URL: tinyurl.com/zn9edcu
+```
+
+**Capacity Calculation:**
+
+\[
+62^7 \approx 3.52 \text{ trillion}
+\]
+
+#### 2. Hash + Collision Resolution
+
+- Apply hash functions such as CRC32, MD5, or SHA-1 to the original URL.
+- Use the first 7 characters of the generated hash as the short code.
+- Different URLs can generate the same short code, causing a **hash collision**.
+
+**Collision Resolution:**
+
+- Check whether the generated short code already exists in the database.
+- If a collision occurs, append a predefined string (salt) and generate another hash.
+- Repeat until a unique short code is generated.
+- Bloom Filters can improve lookup efficiency by checking whether a short code might already exist.
+
+**Example:**
+
+```text
+First Attempt:
+google.com → abc123x (Collision)
+
+Second Attempt:
+google.com + salt → xyz789p (Unique)
+```
+
+### 3. Comparison: Base 62 vs Hash + Collision Resolution
+
+| Feature | Hash + Collision | Base 62 |
+|---|---|---|
+| URL Length | Fixed | Variable |
+| Unique ID Generator | Not required | Required |
+| Collision | Possible | Not possible with unique IDs |
+| Next Available URL | Difficult | Easy with sequential IDs |
+| Security | Depends on hash design | Sequential IDs can be guessed |
+
+**Key Points:**
+
+- **Base 62:** Converts unique numerical IDs into short alphanumeric codes.
+- **Hashing:** Generates short codes from original URLs.
+- **Collision:** Occurs when different URLs generate the same short code.
+- **Bloom Filter:** Helps identify possible existing codes efficiently.
+- **Security Concern:** Sequential IDs can make short URLs predictable.
