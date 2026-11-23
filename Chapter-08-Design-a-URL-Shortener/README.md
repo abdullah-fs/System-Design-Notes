@@ -385,3 +385,39 @@ User Clicks Short URL
 - **Distributed ID Generator:** Generates unique IDs across multiple servers.
 - **Base 62:** Converts numerical IDs into short alphanumeric codes.
 - **Redis:** Can be used as a cache for frequently accessed URLs.
+
+
+
+## Additional Considerations
+
+### 1. Rate Limiter
+
+- Prevents abuse by limiting the number of requests per IP address.
+- Protects the system from excessive requests and server overload.
+- Returns `429 Too Many Requests` when the limit is exceeded.
+
+### 2. Scalability
+
+**A. Web Tier**
+- Keep web servers stateless.
+- Add or remove web servers based on traffic demands.
+- Use horizontal scaling to handle increasing traffic.
+
+**B. Database Tier**
+- **Replication:** Maintain multiple copies of data across database servers.
+- **Sharding:** Divide large databases into smaller parts to distribute the load.
+
+### 3. Analytics
+
+Collect user activity data for business insights, including:
+
+- **Click Rates:** Number of clicks on short URLs.
+- **Source:** Platform or website from which users access the link.
+- **Timestamps:** Date and time of each click.
+
+### 4. High Availability and Reliability
+
+- **High Availability:** Keep the service accessible with minimal downtime.
+- **Reliability:** Ensure consistent and correct system operations.
+- **Database Replication:** Maintain backup copies of data.
+- **Fault Tolerance:** Keep the service running even when some components fail.
