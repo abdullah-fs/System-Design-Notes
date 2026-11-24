@@ -515,6 +515,8 @@ A cache is a fast storage layer that temporarily stores frequently accessed data
 Keeping frequently used books on your study table instead of searching for them in a cupboard every time.
 
 The News Feed System uses five cache layers.
+<img width="1248" height="698" alt="image" src="https://github.com/user-attachments/assets/60a8becf-5dd3-4637-b564-96e2674d6f66" />
+
 
 ## 2. Five Cache Layers
 
