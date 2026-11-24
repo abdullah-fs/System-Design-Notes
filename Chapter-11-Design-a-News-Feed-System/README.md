@@ -105,3 +105,60 @@ The feed supports:
 - Cloud Storage: Stores images and videos.
 - Express: Handles APIs and uploads.
 - React: Displays feed content.
+
+
+
+# Step 2: High-Level Design
+
+## Overview
+
+The News Feed System consists of two main flows:
+
+1. Feed Publishing
+2. News Feed Building
+
+## 1. Feed Publishing
+
+Feed Publishing is the process of saving a new post and distributing it to the feeds of the user's friends.
+
+### Process
+1. User publishes a post.
+2. The post is saved in the database.
+3. The system identifies the user's friends.
+4. The post is propagated to their feeds.
+
+**Daily-Life Example:**
+
+Ali uploads a photo on Facebook. The system saves it and distributes it to his friends' feeds.
+
+**Key Point:** Distribute new posts to friends.
+<img width="1513" height="949" alt="image" src="https://github.com/user-attachments/assets/76b7e2bd-b0e7-4d20-af04-57683b0e366c" />
+
+
+## 2. News Feed Building
+
+News Feed Building is the process of collecting posts from a user's friends and preparing a news feed.
+
+### Process
+1. User requests their news feed.
+2. System retrieves posts from friends.
+3. All posts are aggregated.
+4. Posts are sorted in reverse chronological order.
+5. The final feed is returned to the user.
+
+**Daily-Life Example:**
+
+Ahmed opens Facebook. The system collects posts from his friends and displays the newest posts first.
+
+**Key Point:** Aggregate and sort friends' posts.
+<img width="1040" height="460" alt="image" src="https://github.com/user-attachments/assets/dc68fc70-1a56-4254-8721-8731d10e66f2" />
+
+
+## 3. Difference Between Both Flows
+
+| Feed Publishing | News Feed Building |
+|---|---|
+| Publishes a post. | Retrieves the feed. |
+| Distributes posts to friends. | Collects posts from friends. |
+| Write operation. | Read operation. |
+| Happens when a post is published. | Happens when a feed is requested. |
