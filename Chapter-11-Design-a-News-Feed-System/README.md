@@ -501,3 +501,99 @@ User 102 → [500, 390, 350]
 - **Fanout Workers:** Process distribution tasks.
 - **News Feed Cache:** Stores recent post IDs.
 - **Configurable Limit:** Controls cache memory consumption.
+
+
+
+# News Feed Retrieval Deep Dive
+
+## 1. Cache Architecture
+
+A cache is a fast storage layer that temporarily stores frequently accessed data to reduce database queries and improve retrieval performance.
+
+**Daily-Life Example:**
+
+Keeping frequently used books on your study table instead of searching for them in a cupboard every time.
+
+The News Feed System uses five cache layers.
+
+## 2. Five Cache Layers
+
+### A. News Feed Cache
+- Stores post IDs for each user's news feed.
+- Allows quick retrieval of feed entries.
+
+**Example:**
+```text
+User 101 → [500, 450, 420]
+User 102 → [500, 390, 350]
+```
+
+**Daily-Life Example:** A shopping list containing product names or codes.
+
+### B. Content Cache
+- Stores complete post details.
+- Includes text, image URLs, video URLs, and other post information.
+- Popular posts are stored in a Hot Cache for faster access.
+
+**Daily-Life Example:** Frequently borrowed library books are placed on easily accessible shelves.
+
+### C. Social Graph Cache
+- Stores user relationships and connections.
+- Helps identify friends and followers quickly.
+
+**Example:**
+```text
+Ali → [Ahmed, Usman, Bilal]
+Ahmed → [Ali, Hamza]
+```
+
+**Daily-Life Example:** A phone contact list containing friends and family members.
+
+### D. Action Cache
+- Tracks user interactions.
+- Stores information about likes, replies, and shares.
+- Helps determine whether a user has already liked or interacted with a post.
+
+**Example:**
+```text
+Post 500:
+Ali → Liked
+Ahmed → Not Liked
+Usman → Liked
+```
+
+**Daily-Life Example:** An attendance sheet showing which students are present.
+
+### E. Counter Cache
+- Maintains activity counts.
+- Stores total likes, replies, shares, and followers.
+- Avoids repeatedly counting records.
+
+**Example:**
+```text
+Post 500:
+Likes: 250
+Replies: 40
+Shares: 15
+```
+
+**Daily-Life Example:** A teacher maintaining the total number of students present in a classroom.
+
+## 3. Comparison of Cache Layers
+
+| Cache | Stores | Purpose |
+|---|---|---|
+| News Feed Cache | Post IDs | Fast feed retrieval |
+| Content Cache | Post details | Fast content access |
+| Social Graph Cache | User relationships | Find connections |
+| Action Cache | Likes, replies, shares | Track interactions |
+| Counter Cache | Activity counts | Display totals quickly |
+
+## Key Takeaways
+
+- **News Feed Cache:** Stores post IDs.
+- **Content Cache:** Stores complete post information.
+- **Hot Cache:** Stores frequently accessed popular content.
+- **Social Graph Cache:** Stores user relationships.
+- **Action Cache:** Tracks individual user interactions.
+- **Counter Cache:** Maintains activity totals.
