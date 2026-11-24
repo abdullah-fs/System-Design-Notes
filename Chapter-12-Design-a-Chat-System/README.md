@@ -297,3 +297,76 @@ WebSocket connections are initially established through an HTTP handshake and th
 9. When Ali reconnects, pending messages are synchronized.
 
 **Key Takeaway:** Chat servers handle real-time messaging, presence servers manage user status, API servers handle user operations, notification servers send alerts, and KV stores efficiently store chat history.
+
+
+
+# Step 3: Design Deep Dive
+
+## 1. Service Discovery
+
+- Recommends the best chat server for a client.
+- Considers geographical location, server capacity, and current load.
+- Uses Apache ZooKeeper to manage chat server information and assist server allocation.
+- Ensures efficient load distribution and reduces latency.
+
+## 2. Messaging Flows
+
+### One-on-One Chat
+
+1. User A sends a message to Chat Server 1.
+2. Chat Server 1 assigns a unique message ID.
+3. The message is stored in the key-value store.
+4. If User B is online, the message is forwarded to Chat Server 2.
+5. Chat Server 2 delivers the message through User B's WebSocket connection.
+6. If User B is offline, a push notification can be sent.
+
+### Group Chat
+
+- Messages are copied into individual inboxes of group recipients.
+- Each recipient maintains an inbox or message synchronization queue.
+- Messages from different senders can be stored in the same recipient inbox.
+- This simplifies message synchronization.
+- However, copying messages to many recipients increases storage and write costs.
+
+## 3. Message Synchronization
+
+- Users may access their accounts from multiple devices.
+- Each device maintains `cur_max_message_id`.
+- This variable tracks the latest message ID received by the device.
+
+A message is considered new when:
+
+1. `recipient_id` matches the currently logged-in user ID.
+2. `message_id` is greater than `cur_max_message_id`.
+
+Devices fetch and synchronize new messages using these conditions.
+
+## 4. Online Presence
+
+### Heartbeat Mechanism
+
+- Clients periodically send heartbeat signals to presence servers.
+- Heartbeats indicate that the client is still connected.
+- If no heartbeat is received within a specified timeout, the user is marked offline.
+- Example: A timeout may be configured as 30 seconds.
+
+### Fanout Model
+
+- Presence updates are distributed using a publish-subscribe model.
+- Each friend pair maintains a communication channel.
+- When User A's status changes, the event is published to friends' channels.
+- Friends receive the updated online/offline status through their subscribed channels.
+- This approach is effective for small friend groups but becomes expensive for users with many contacts.
+
+## Daily Life Example — WhatsApp
+
+1. Abdullah opens WhatsApp and connects to a suitable chat server through service discovery.
+2. Abdullah sends a message to Ali.
+3. The chat server assigns a message ID and stores the message.
+4. If Ali is online, the message is forwarded to his chat server and delivered through WebSocket.
+5. If Ali is offline, the message remains available for later delivery and a push notification may be sent.
+6. If Abdullah uses WhatsApp on multiple devices, each device synchronizes new messages using its latest message ID.
+7. WhatsApp clients periodically send heartbeats to indicate they are connected.
+8. When Abdullah comes online, his presence update is distributed to subscribed friends.
+
+**Key Takeaway:** Service discovery selects chat servers, messaging flows deliver messages, synchronization keeps devices updated, heartbeat tracks connectivity, and fanout distributes presence updates.
