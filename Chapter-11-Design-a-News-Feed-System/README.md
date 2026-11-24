@@ -336,3 +336,168 @@ Feed Cache: [105, 102, 98, 95]
 - **Fanout Service:** Distributes posts to friends' feeds.
 - **News Feed Building:** Retrieves post IDs and complete post details.
 - **Notification Service:** Notifies friends about new posts.
+
+
+
+# Step 3: Design Deep Dive
+
+## 1. Web Servers
+
+Web Servers perform two main tasks:
+
+### A. Authentication
+- Verify users using `auth_token`.
+- Ensure requests come from authenticated users.
+
+**Daily-Life Example:** A bank verifies your identity before allowing a transaction.
+
+### B. Rate Limiting
+- Restricts the number of requests a user can make.
+- Prevents spam and excessive requests.
+
+**Daily-Life Example:** A system limits a user from publishing 1,000 posts within one minute.
+
+## 2. Fanout Service
+
+Fanout Service distributes newly published posts to users' news feeds.
+
+It supports three approaches:
+
+### A. Fanout on Write (Push Model)
+
+Posts are pushed to friends' feeds immediately when published.
+
+**Process:**
+1. User publishes a post.
+2. System identifies friends.
+3. Post IDs are added to friends' feed caches.
+
+**Pros:**
+- Real-time updates.
+- Fast feed retrieval.
+
+**Cons:**
+- Resource-intensive for users with many friends.
+- Requires multiple cache updates.
+
+**Daily-Life Example:** Sending an announcement individually to 100 friends immediately.
+
+### B. Fanout on Read (Pull Model)
+
+Posts are retrieved when a user requests their news feed.
+
+**Process:**
+1. User publishes a post.
+2. Post is saved in the database.
+3. Friends' feeds are not updated immediately.
+4. Posts are retrieved when a friend opens their feed.
+
+**Pros:**
+- Efficient for inactive users.
+- Avoids unnecessary feed updates.
+
+**Cons:**
+- Slower feed retrieval.
+- More database reads.
+
+**Daily-Life Example:** A newspaper is provided when a reader comes to collect it.
+
+### C. Hybrid Approach
+
+Combines Fanout on Write and Fanout on Read.
+
+- Normal users: Fanout on Write.
+- Celebrities / High-connection users: Fanout on Read.
+
+**Pros:**
+- Faster feeds for normal users.
+- Avoids excessive fanout for celebrities.
+- Balances system resources.
+
+**Daily-Life Example:** A local shop sends offers directly to regular customers, while a famous brand provides offers when customers open its app.
+
+## 3. Internal Working of Fanout Service
+<img width="984" height="892" alt="image" src="https://github.com/user-attachments/assets/361398fb-bd23-4ea4-a180-271e1d19a09a" />
+
+
+### Step 1: Fetch Friend IDs
+- Retrieve friends' IDs from a Graph Database.
+- Identify the user's connections.
+
+**Daily-Life Example:** Checking your phone's contact list to find your contacts.
+
+### Step 2: Filter Friends from Cache
+- Retrieve user settings from cache.
+- Exclude muted friends and users restricted by privacy settings.
+
+**Daily-Life Example:** Hiding your WhatsApp status from selected contacts.
+
+### Step 3: Send to Message Queue
+- Send the filtered friend list and new post ID to a Message Queue.
+- Queue tasks for asynchronous processing.
+
+**Daily-Life Example:** Restaurant orders are placed in a queue before kitchen workers process them.
+
+**Benefits:**
+- Loose coupling.
+- Asynchronous processing.
+- Better workload management.
+
+### Step 4: Fanout Workers
+- Workers retrieve tasks from the Message Queue.
+- Update friends' News Feed Cache.
+- Multiple workers can process tasks in parallel.
+
+**Daily-Life Example:** Multiple kitchen workers process different customer orders simultaneously.
+
+#### Store IDs Instead of Full Objects
+
+The cache stores post IDs and user IDs instead of complete user and post objects.
+
+Example:
+```text
+User 101 → [500, 450, 420]
+User 102 → [500, 390, 350]
+```
+
+**Benefits:**
+- Reduces memory consumption.
+- Avoids storing duplicate post data.
+- Allows more feed entries in cache.
+
+**Daily-Life Example:** A library uses book reference numbers instead of providing complete copies of every book.
+
+### Step 5: Store in News Feed Cache
+- Append new post IDs to friends' feed caches.
+- Maintain posts in reverse chronological order.
+- Apply a configurable limit to store only recent posts.
+- Remove older entries when the limit is exceeded.
+
+**Daily-Life Example:** Keeping only the latest 100 notifications on your phone and removing older ones.
+
+**Benefits:**
+- Controls cache memory usage.
+- Keeps recent posts readily available.
+- Improves feed retrieval performance.
+
+## 4. Complete Fanout Flow
+
+1. User publishes a post.
+2. Fetch friend IDs from Graph Database.
+3. Filter friends using cached user settings.
+4. Send eligible user IDs and post ID to Message Queue.
+5. Fanout Workers process queued tasks.
+6. Update friends' News Feed Cache with post IDs.
+7. Maintain a configurable limit for recent posts.
+
+## Key Takeaways
+
+- **Authentication:** Verifies user identity.
+- **Rate Limiting:** Prevents excessive requests.
+- **Fanout on Write:** Pushes posts at publishing time.
+- **Fanout on Read:** Retrieves posts at feed request time.
+- **Hybrid Approach:** Combines both models.
+- **Message Queue:** Manages asynchronous tasks.
+- **Fanout Workers:** Process distribution tasks.
+- **News Feed Cache:** Stores recent post IDs.
+- **Configurable Limit:** Controls cache memory consumption.
