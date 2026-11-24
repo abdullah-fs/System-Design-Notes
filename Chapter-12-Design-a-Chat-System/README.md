@@ -207,3 +207,93 @@ WebSocket connections are initially established through an HTTP handshake and th
 9. When the receiver reconnects, the chat system synchronizes and delivers pending messages.
 
 **Key Takeaway:** Stateless services manage user-related operations, Stateful services maintain real-time chat connections, and Third-Party services handle push notifications.
+
+
+
+# Chat System — Design
+<img width="758" height="488" alt="image" src="https://github.com/user-attachments/assets/e9d24ad9-0469-4e8f-a9e0-0d82e207f7c8" />
+<img width="1200" height="1029" alt="image" src="https://github.com/user-attachments/assets/5ce32596-c2f3-4aef-889c-8cada415dce0" />
+<img width="1600" height="973" alt="image" src="https://github.com/user-attachments/assets/24ed5861-b4ed-475f-9171-f2131811a5d3" />
+<img width="2000" height="1477" alt="image" src="https://github.com/user-attachments/assets/610000da-8da4-4c2e-bd4c-d30b1b62682d" />
+<img width="1600" height="1388" alt="image" src="https://github.com/user-attachments/assets/e248b9e0-09d4-4053-92f1-bb2646b4a69f" />
+
+
+## 1. Client-Server Communication
+
+- The client maintains a persistent WebSocket connection with a chat server.
+- WebSocket enables real-time, bi-directional communication.
+
+## 2. Components
+
+### Chat Servers
+- Handle sending and receiving messages.
+- Maintain WebSocket connections.
+- Deliver messages to recipients.
+
+### Presence Servers
+- Manage users' online/offline status.
+- Track active user connections.
+
+### API Servers
+- Handle signup, login, and profile management.
+- Provide APIs for user information and chat history.
+
+### Notification Servers
+- Send push notifications for new messages.
+- Notify users when they are offline or inactive.
+
+### Key-Value Store
+- Stores chat history and message data.
+- Provides low-latency data access.
+- Supports horizontal scaling.
+- Handles large volumes of chat data efficiently.
+
+## 3. Why Key-Value Store?
+
+- **Horizontal Scaling:** Easily scale by adding more servers.
+- **Low Latency:** Fast read and write operations.
+- **Large Data Handling:** Suitable for storing large amounts of chat history.
+- **Proven at Scale:** Distributed KV and wide-column databases are used in large messaging systems.
+
+## 4. Data Models
+
+### One-to-One Chat
+
+- Messages are stored with a unique `message_id`.
+- The primary key is `message_id`.
+- Message IDs help identify messages and maintain their sequence.
+
+### Group Chat
+
+- Uses a composite primary key: `(channel_id, message_id)`.
+- `channel_id` identifies the group or chat.
+- `message_id` identifies a message within that channel.
+- The same message ID can exist in different channels.
+
+## 5. Message ID Generation
+
+### Global Sequence Number
+
+- Generates unique IDs across the entire system.
+- Example: Snowflake 64-bit ID generator.
+- Requires globally unique ID generation.
+
+### Local Sequence Number
+
+- Generates message IDs independently within each chat channel.
+- IDs only need to be unique within the same channel.
+- Simplifies message ordering and reduces dependency on a global generator.
+
+## 6. Daily Life Example — WhatsApp
+
+1. Abdullah logs into WhatsApp through API servers.
+2. His client establishes a WebSocket connection with a chat server.
+3. Abdullah sends a message to Ali.
+4. The chat server assigns a message ID and stores the message in the KV store.
+5. The presence server checks Ali's online/offline status.
+6. If Ali is online, the message is delivered through his active WebSocket connection.
+7. If Ali is offline, the message remains stored for later delivery.
+8. The notification server sends a push notification to Ali.
+9. When Ali reconnects, pending messages are synchronized.
+
+**Key Takeaway:** Chat servers handle real-time messaging, presence servers manage user status, API servers handle user operations, notification servers send alerts, and KV stores efficiently store chat history.
