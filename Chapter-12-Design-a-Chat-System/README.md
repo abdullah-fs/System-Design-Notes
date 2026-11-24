@@ -164,3 +164,46 @@ WebSocket connections are initially established through an HTTP handshake and th
 - **WebSocket:** Having a phone call where both people can talk and listen continuously.
 
 **Key Takeaway:** WebSocket is preferred for real-time chat because it supports persistent, bi-directional communication between clients and servers.
+
+
+
+# Components of Chat System
+
+## 1. Stateless Services
+
+- Handle user signup, login, and profile management.
+- Use service discovery to identify a suitable chat server.
+- Do not maintain users' active WebSocket connection state.
+- Requests can be handled independently by different service instances.
+
+## 2. Stateful Services
+
+- Chat servers maintain persistent WebSocket connections.
+- Responsible for sending and receiving messages.
+- Manage message delivery and synchronization.
+- Track active user connections.
+
+## 3. Third-Party Integration
+
+- External services provide additional functionality.
+- Push notification services notify users about new messages.
+- Notifications can be delivered when the app is inactive or closed.
+- Examples: Firebase Cloud Messaging (FCM) and Apple Push Notification Service (APNs).
+
+<img width="656" height="429" alt="image" src="https://github.com/user-attachments/assets/19e564ef-2dd3-451e-8910-957daedf8b06" />
+
+## Daily Life Example
+
+### WhatsApp Chat Example
+
+1. A user opens WhatsApp and logs in. Stateless services handle authentication.
+2. Service discovery identifies a suitable chat server for the user.
+3. The user's device establishes a WebSocket connection with the chat server.
+4. The chat server maintains the user's active connection.
+5. When the user sends a message, the chat server processes and delivers it to the receiver.
+6. If the receiver is online, the message is delivered through their active connection.
+7. If the receiver is offline, the system stores the message for later delivery.
+8. A push notification service can notify the receiver about the new message.
+9. When the receiver reconnects, the chat system synchronizes and delivers pending messages.
+
+**Key Takeaway:** Stateless services manage user-related operations, Stateful services maintain real-time chat connections, and Third-Party services handle push notifications.
