@@ -162,3 +162,67 @@ Ahmed opens Facebook. The system collects posts from his friends and displays th
 | Distributes posts to friends. | Collects posts from friends. |
 | Write operation. | Read operation. |
 | Happens when a post is published. | Happens when a feed is requested. |
+
+
+
+# News Feed APIs
+
+The News Feed System provides two main APIs.
+
+## 1. Feed Publishing API
+
+Allows users to publish new posts.
+
+**Endpoint:**
+```http
+POST /v1/me/feed
+```
+
+**Parameters:**
+- `content`: Text or content of the post.
+- `auth_token`: Authentication token.
+
+**Process:**
+1. User creates a post.
+2. Frontend sends a POST request.
+3. Backend verifies the authentication token.
+4. Post is saved in the database.
+5. Success response is returned.
+
+**Daily-Life Example:**
+
+When a user writes "Hello World" on Facebook and clicks Share, the publishing API saves the post.
+
+## 2. News Feed Retrieval API
+
+Allows users to retrieve their news feed.
+
+**Endpoint:**
+```http
+GET /v1/me/feed
+```
+
+**Parameters:**
+- `auth_token`: Authentication token.
+
+**Process:**
+1. User opens the application.
+2. Frontend sends a GET request.
+3. Backend verifies authentication.
+4. Friends' posts are retrieved.
+5. Posts are returned in reverse chronological order.
+
+**Daily-Life Example:**
+
+When a user opens Facebook, the retrieval API provides the latest posts from their friends.
+
+## 3. Difference Between APIs
+
+| Publishing API | Retrieval API |
+|---|---|
+| POST request | GET request |
+| Creates a new post | Retrieves existing posts |
+| content + auth_token | auth_token |
+| Write operation | Read operation |
+
+**Key Point:** Both APIs use the same endpoint but different HTTP methods.
