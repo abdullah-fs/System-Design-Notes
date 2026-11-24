@@ -226,3 +226,113 @@ When a user opens Facebook, the retrieval API provides the latest posts from the
 | Write operation | Read operation |
 
 **Key Point:** Both APIs use the same endpoint but different HTTP methods.
+
+
+
+# Feed Publishing and News Feed Building
+
+## 1. Feed Publishing
+<img width="1400" height="903" alt="image" src="https://github.com/user-attachments/assets/ea2d0314-8fbe-4182-a554-ad14811b52a5" />
+
+
+Feed Publishing is the process of storing a new post and distributing it to the user's friends.
+
+### Components
+
+**1. User Interaction**
+- User publishes a post through the Feed Publishing API.
+
+**Daily-Life Example:** Ali uploads a photo on Facebook and clicks Share.
+
+**2. Load Balancer**
+- Distributes incoming traffic across multiple web servers.
+- Prevents a single server from becoming overloaded.
+
+**Daily-Life Example:** A hospital distributes patients across multiple reception counters.
+
+**3. Web Servers**
+- Receive incoming requests.
+- Authenticate users.
+- Forward requests to relevant services.
+
+**Daily-Life Example:** A receptionist verifies a patient's identity and directs them to the appropriate doctor.
+
+**4. Post Service**
+- Stores posts in the database and cache.
+
+**Daily-Life Example:** Keeping original documents in a cabinet and frequently used copies on a desk.
+
+**5. Fanout Service**
+- Distributes newly published posts to friends' news feeds.
+- Updates friends' feed entries in the cache.
+
+**Daily-Life Example:** Ali publishes a post, and the system distributes it to his 100 friends' feeds.
+
+**6. Notification Service**
+- Sends notifications to friends about new posts.
+
+**Daily-Life Example:** Friends receive a notification saying "Ali shared a new post."
+
+## 2. News Feed Building
+
+News Feed Building retrieves posts from the user's feed and prepares them for display.
+<img width="744" height="392" alt="image" src="https://github.com/user-attachments/assets/6e808ce4-53e1-4f80-93aa-9362a43c438b" />
+
+### Components
+
+**1. User Interaction**
+- User requests their news feed through the Retrieval API.
+
+**Daily-Life Example:** Ahmed opens Facebook to view recent posts.
+
+**2. Load Balancer**
+- Distributes incoming feed requests across multiple web servers.
+
+**Daily-Life Example:** A shopping mall distributes visitors across multiple entry gates.
+
+**3. Web Servers**
+- Receive requests.
+- Authenticate users.
+- Forward requests to the News Feed Service.
+
+**Daily-Life Example:** A receptionist verifies identity and directs visitors to the correct department.
+
+**4. News Feed Service**
+
+Responsible for preparing the user's news feed.
+
+It performs two main operations:
+
+**A. Fetch Post IDs**
+- Retrieves post IDs from the news feed cache.
+
+Example:
+```text
+User: Ahmed
+Feed Cache: [105, 102, 98, 95]
+```
+
+**B. Fetch Complete Post Details**
+- Retrieves complete post information using post IDs.
+- Fetches data from the database or cache.
+- Returns the prepared feed to the user.
+
+**Daily-Life Example:** A shopping list contains product codes. You use those codes to retrieve complete products from a store.
+
+## 3. Feed Publishing vs News Feed Building
+
+| Feed Publishing | News Feed Building |
+|---|---|
+| Creates a new post. | Retrieves existing posts. |
+| Write operation. | Read operation. |
+| Uses Post Service. | Uses News Feed Service. |
+| Uses Fanout Service. | Fetches post IDs from feed cache. |
+| Updates friends' feeds. | Prepares the user's feed. |
+| Sends notifications. | Returns complete post details. |
+
+## Key Takeaway
+
+- **Feed Publishing:** Saves and distributes posts.
+- **Fanout Service:** Distributes posts to friends' feeds.
+- **News Feed Building:** Retrieves post IDs and complete post details.
+- **Notification Service:** Notifies friends about new posts.
