@@ -599,3 +599,131 @@ Shares: 15
 - **Social Graph Cache:** Stores user relationships.
 - **Action Cache:** Tracks individual user interactions.
 - **Counter Cache:** Maintains activity totals.
+
+
+
+# Key Optimizations
+
+Key optimizations improve the News Feed System's scalability, performance, reliability, and monitoring.
+
+## 1. Scaling
+
+Scaling increases system capacity to handle more users and requests.
+
+### A. Database Scaling
+
+**Horizontal Scaling and Sharding**
+- Horizontal scaling adds more servers.
+- Sharding divides database data across multiple servers.
+
+**Daily-Life Example:** A school divides 1,000 students into four classrooms to make management easier.
+
+**Read Replicas**
+- Create database copies for handling read requests.
+- Primary database handles writes.
+- Read replicas handle reads.
+- Reduce read load on the primary database.
+
+**Daily-Life Example:** A library keeps original books safe and provides multiple copies for students to read.
+
+### B. Stateless Web Tier
+
+- Web servers do not permanently store user session data locally.
+- Session information is stored in shared storage or centralized systems.
+- Makes horizontal scaling easier.
+
+**Daily-Life Example:** A bank customer can access their account from different branches because account data is centrally available.
+
+## 2. Caching
+
+Caching stores frequently accessed data in fast memory.
+
+### A. Store Frequently Accessed Data in Memory
+- Cache popular posts and frequently accessed user information.
+- Reduce repeated database queries.
+
+**Daily-Life Example:** Keeping frequently used books on your study desk.
+
+### B. Use Cache Layers
+- News Feed Cache
+- Content Cache
+- Social Graph Cache
+- Action Cache
+- Counter Cache
+
+**Purpose:** Reduce latency and database load.
+
+**Daily-Life Example:** Supermarkets place frequently purchased products on easily accessible shelves.
+
+## 3. Reliability
+
+Reliability ensures that the system remains stable under heavy traffic.
+
+### A. Consistent Hashing
+- Distributes data or requests across multiple servers.
+- Minimizes data redistribution when servers are added or removed.
+- Helps maintain balanced distribution.
+
+**Daily-Life Example:** Moving only a few students to different hostel rooms when a room is added or removed.
+
+### B. Message Queues
+- Temporarily store tasks.
+- Decouple system components.
+- Support asynchronous processing.
+- Buffer traffic during high-load periods.
+
+**Daily-Life Example:** A restaurant waiter sends orders to the kitchen while continuing to serve other customers.
+
+## 4. Monitoring
+
+Monitoring tracks system performance and identifies problems.
+
+### A. QPS (Queries Per Second)
+- Measures how many queries or requests a system handles per second.
+
+**Example:** 5,000 requests per second = 5,000 QPS.
+
+**Daily-Life Example:** Measuring how many customer orders a shop receives per second.
+
+### B. Latency
+- Measures the time taken to process a request and return a response.
+- Lower latency generally means faster responses.
+
+**Example:** A feed API responds in 200 milliseconds.
+
+**Daily-Life Example:** Waiting 10 minutes for a restaurant order.
+
+### C. Cache Hit Rate
+
+Measures the percentage of requests successfully served from the cache.
+
+**Formula:**
+
+Hit Rate = (Cache Hits / Total Cache Requests) × 100
+
+**Example:**
+- Total Requests: 1,000
+- Cache Hits: 800
+- Cache Hit Rate: 80%
+
+**Daily-Life Example:** Finding 8 out of 10 required books on your study table.
+
+### D. Adjust Cache Configurations
+- Increase cache size when necessary.
+- Cache frequently accessed data.
+- Adjust cache expiration times.
+- Optimize configurations using monitoring results.
+
+**Daily-Life Example:** Increasing your study desk size when frequently used books no longer fit.
+
+## Key Takeaways
+
+- **Sharding:** Distributes database data across multiple servers.
+- **Read Replicas:** Handle read requests and reduce primary database load.
+- **Stateless Web Tier:** Enables easy horizontal scaling.
+- **Caching:** Reduces latency and database load.
+- **Consistent Hashing:** Minimizes redistribution when servers change.
+- **Message Queues:** Enable asynchronous processing and traffic buffering.
+- **QPS:** Measures requests per second.
+- **Latency:** Measures response time.
+- **Cache Hit Rate:** Measures successful cache retrievals.
