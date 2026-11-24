@@ -88,7 +88,7 @@ Design a scalable and reliable system capable of sending millions of notificatio
 3. **Performance Bottlenecks:** High notification volumes can overload the server.
 
 ### 5. Improved Design
-![Uploading image.png…]()
+<img width="1210" height="812" alt="image" src="https://github.com/user-attachments/assets/167bc8b9-c7d4-43c9-b4d0-5913287b5acf" />
 
 
 - **Separate Database and Cache:** Move databases and caches outside notification servers.
@@ -117,3 +117,134 @@ Imagine a courier company handling 10,000 parcels daily:
 3. Request is added to the message queue.
 4. Workers pick requests from the queue.
 5. Notifications are delivered through third-party services.
+
+
+
+## Step 3: Design Deep Dive
+
+### 1. Reliability
+
+Reliability ensures notifications are not lost or unnecessarily duplicated, even when failures occur.
+
+**A. Prevent Data Loss**
+- Store notification data in a database.
+- Maintain a Notification Log Database.
+- Implement a retry mechanism for failed notifications.
+
+**Example:** A courier company saves every parcel record and reschedules delivery if an attempt fails.
+
+**B. Deduplication**
+- Assign a unique Event ID to every notification.
+- Check whether the Event ID has already been processed.
+- Discard duplicate events to prevent duplicate notifications.
+
+**Example:** A courier company checks the parcel ID to avoid processing the same delivery order twice.
+
+### 2. Additional Components
+
+**A. Notification Templates**
+- Use preformatted templates for consistent notifications.
+- Insert dynamic data such as user names and order IDs.
+
+**Example:** A courier company uses the same delivery message template and changes only the customer's name and parcel ID.
+
+**B. Notification Settings**
+- Allow users to opt-in or opt-out of specific notification channels.
+- Support Push, SMS, and Email preferences.
+- Store preferences in a dedicated Notification Settings Table.
+
+**Example:** A user disables SMS notifications but keeps email notifications enabled.
+
+**C. Rate Limiting**
+- Limit the frequency of notifications sent to users.
+- Prevent unnecessary notifications and spam.
+
+**Example:** A courier company limits repeated delivery messages instead of sending an SMS every five minutes.
+
+**D. Retry Mechanism**
+- Retry sending notifications when third-party services fail.
+- Handle temporary delivery failures.
+
+**Example:** A courier company attempts delivery again if the customer is unavailable.
+
+**E. Monitoring Queues**
+- Monitor pending notifications in message queues.
+- Add more workers when queue traffic increases.
+- Maintain efficient notification processing.
+
+**Example:** A courier company hires additional delivery workers when the number of pending parcels increases.
+
+**F. Event Tracking**
+- Track notification performance and user engagement.
+- Important metrics:
+  - **Open Rate:** Percentage of users who open notifications.
+  - **Click Rate:** Percentage of users who click notifications.
+  - **Engagement:** How users interact with notifications.
+
+**Example:** A courier company tracks how many customers open SMS messages and click tracking links.
+
+### 3. Security
+
+**AppKey and AppSecret**
+- Authenticate and secure notification APIs.
+- Verify authorized applications.
+- Prevent unauthorized access.
+
+**Example:** A courier company allows only authorized staff with valid ID cards and access codes to enter its office.
+
+### 4. Updated Notification Flow
+![Uploading image.png…]()
+
+
+1. **Trigger Services:** Call APIs to initiate notifications.
+
+   **Example:** A customer places an order.
+
+2. **Notification Servers:** Validate requests and fetch metadata from caches or databases.
+
+   **Example:** The courier office checks the customer's address and phone number.
+
+3. **Message Queues:** Store notification events for processing.
+
+   **Example:** Pending parcels are placed in a waiting area.
+
+4. **Workers:** Retrieve events from queues and interact with third-party services.
+
+   **Example:** Delivery staff collect parcels for dispatch.
+
+5. **Third-Party Services:** Deliver notifications to users through Push, SMS, or Email.
+
+   **Example:** The courier company sends a delivery update through SMS or email.
+
+
+
+   ## Key Optimizations
+
+### 1. Horizontal Scaling
+- Add multiple notification servers to distribute incoming requests.
+- Reduce load on individual servers.
+- Add more servers when traffic increases.
+
+**Example:** A courier company opens multiple offices to distribute customer traffic instead of relying on one office.
+
+### 2. Message Queues
+- Decouple notification processing from application services.
+- Temporarily store notification requests in queues.
+- Workers retrieve and process messages.
+- Handle high notification volumes efficiently.
+
+**Example:** A restaurant maintains an order queue so chefs can prepare orders systematically.
+
+### 3. Caching
+- Store frequently accessed data in cache.
+- Reduce database queries.
+- Minimize latency and improve performance.
+
+**Example:** A courier office keeps frequently used customer addresses readily available instead of checking the main register every time.
+
+### 4. Geographical Distribution
+- Distribute notification processing across different geographical regions.
+- Use nearby servers to reduce network latency.
+- Improve notification delivery performance.
+
+**Example:** A courier company opens regional offices in different cities to deliver parcels faster.
