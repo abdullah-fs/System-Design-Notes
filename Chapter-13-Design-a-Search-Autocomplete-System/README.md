@@ -856,3 +856,31 @@ Imagine a supermarket tracking which products customers buy most often.
 7. **Load Balancing:** Direct each request to the correct server.
 
 **In short:** Instead of updating the popular product list after every purchase, the supermarket collects sales data and updates the list periodically.
+
+
+
+## Step 4: Advanced Features
+
+### 1. Multi-Language Support
+
+#### Unicode Characters
+- Use Unicode to support characters from different languages.
+- Enables autocomplete for non-English languages such as Urdu, Arabic, and Chinese.
+
+#### Country-Specific Tries
+- Build separate Tries for different countries or regions.
+- Helps provide region-specific search suggestions.
+
+### 2. Trending Queries
+- Handle real-time events and rapidly changing search trends.
+- Dynamically update Trie nodes when necessary.
+- Give more weight to recent queries.
+- Helps trending searches appear quickly in autocomplete suggestions.
+
+### Daily-Life Example
+
+Imagine a search engine used worldwide.
+
+- **Multi-Language Support:** Users can search in their own language, such as Urdu or English.
+- **Country-Specific Tries:** Users in Pakistan may receive locally popular suggestions.
+- **Trending Queries:** During a cricket match, searches like `Pakistan vs India` become popular and receive higher ranking temporarily.
