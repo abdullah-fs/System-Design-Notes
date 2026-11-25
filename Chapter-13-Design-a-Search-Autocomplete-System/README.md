@@ -740,3 +740,119 @@ Previously requested suggestions for `pro` can be displayed from browser cache.
 | Prefix Limit | Reduce search processing |
 | AJAX | Fetch suggestions without page reload |
 | Browser Cache | Reduce repeated server requests |
+
+
+
+# Data Gathering Pipeline
+
+## Why Is the Pipeline Updated?
+
+Updating the Trie after every search query is impractical because:
+
+- Billions of queries may be entered daily.
+- Updating the Trie for every query is expensive.
+- Popular search suggestions do not change significantly in real time.
+
+**Solution:** Collect query data and rebuild the Trie periodically.
+
+## Data Gathering Flow
+
+`Analytics Logs → Aggregators → Workers → Trie Storage`
+
+### 1. Analytics Logs
+- Store raw search query data.
+- Logs are append-only.
+- Usually not indexed.
+- Used for periodic aggregation.
+
+### 2. Aggregators
+- Process logs and calculate query frequencies.
+- Generate frequency tables for Trie construction.
+- Real-time applications may aggregate frequently.
+- Other applications can aggregate weekly.
+
+### 3. Workers
+- Asynchronous servers that rebuild the Trie.
+- Use aggregated frequency data.
+- Store the newly built Trie in persistent storage.
+
+## Storage Options
+
+### Trie Cache
+- Distributed cache that stores the Trie in memory.
+- Provides fast read access for search queries.
+
+### Trie Database (Trie DB)
+
+#### Document Store (e.g., MongoDB)
+- Store periodic Trie snapshots.
+- Serialize the Trie before storing it.
+- Load the snapshot when required.
+
+#### Key-Value Store
+- Map each prefix to its Trie node data.
+- Prefix acts as the key.
+- Node data acts as the value.
+
+Example:
+
+```text
+Key: "app"
+Value: {
+  children: ["l", "e"],
+  topSuggestions: ["apple", "application"]
+}
+```
+
+## Scalability
+
+### 1. Sharding
+- Distribute Trie data across multiple servers.
+- Shard based on prefix ranges.
+
+Example:
+
+```text
+Server 1: a-m
+Server 2: n-z
+```
+
+Further shard heavily loaded ranges:
+
+```text
+aa-ag
+ah-an
+```
+
+This helps distribute storage and query load.
+
+### 2. Load Balancing
+- A Shard Map Manager identifies the correct shard.
+- Routes each query to the server containing the required prefix data.
+- Helps distribute requests across servers.
+
+## Summary
+
+- **Analytics Logs:** Collect raw queries.
+- **Aggregators:** Calculate query frequencies.
+- **Workers:** Rebuild the Trie asynchronously.
+- **Trie Cache:** Provides fast in-memory reads.
+- **Trie DB:** Stores persistent Trie data.
+- **Sharding:** Distributes Trie data across servers.
+- **Shard Map Manager:** Routes requests to the correct shard.
+
+**Pipeline:** Logs → Aggregate → Build Trie → Store → Shard → Route
+
+## Daily-Life Example
+
+Imagine a supermarket tracking which products customers buy most often.
+
+1. **Analytics Logs:** Record every customer purchase.
+2. **Aggregators:** Calculate how many times each product was purchased.
+3. **Workers:** Build an updated list of the most popular products.
+4. **Trie Cache:** Keep popular product lists ready for quick access.
+5. **Trie DB:** Store the complete product list permanently.
+6. **Sharding:** Divide products among different storage servers.
+7. **Load Balancing:** Direct each request to the correct server.
+
+**In short:** Instead of updating the popular product list after every purchase, the supermarket collects sales data and updates the list periodically.
