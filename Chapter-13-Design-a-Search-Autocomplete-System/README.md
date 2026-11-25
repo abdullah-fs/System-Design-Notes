@@ -353,3 +353,169 @@ The system must support continuous storage growth.
 | Yearly Data Growth | 146 GB |
 
 The system should provide fast, popular autocomplete suggestions while handling high traffic, server failures, and growing data.
+
+
+
+# Step 2: High-Level Design
+
+The Search Autocomplete System is divided into two main services:
+
+1. Data Gathering Service
+2. Query Service
+
+## 1. Data Gathering Service
+
+The Data Gathering Service collects user search queries and calculates their frequency.
+
+### Responsibilities
+- Collect search queries from analytics logs.
+- Aggregate queries and calculate their frequency.
+- Update the frequency table.
+- Process historical data to build a Trie.
+
+**Example:**
+
+```text
+youtube: 5000
+youtube music: 3000
+youtube premium: 2000
+```
+
+The service records how frequently each query is searched.
+
+### Historical Data Processing
+
+Processing large datasets in real-time can be expensive.
+
+The system can process historical data weekly and build an updated Trie.
+
+**Example:**  
+Every week, search logs are analyzed to generate an updated Trie containing popular queries.
+
+## 2. Frequency Table
+
+The Frequency Table stores search queries and their popularity.
+
+| Query | Frequency |
+|---|---:|
+| twitter | 5000 |
+| twitch | 4000 |
+| twilio | 3000 |
+| twitter login | 2000 |
+| twitter download | 1000 |
+
+The Query Service uses this table to rank suggestions.
+
+## 3. Query Service
+
+The Query Service handles autocomplete requests from users.
+
+### Responsibilities
+- Receive user input.
+- Find matching queries using a Trie.
+- Retrieve the top-k suggestions.
+- Rank suggestions by popularity.
+- Return results quickly.
+
+**Example:**
+
+Input: `tw`
+
+Output:
+
+```text
+twitter
+twitch
+twilio
+twitter login
+twitter download
+```
+
+## 4. Trie (Prefix Tree)
+
+A Trie stores queries based on their common prefixes.
+
+It allows the system to find matching queries efficiently.
+
+**Example:**
+
+Queries:
+```text
+twitter
+twitch
+twilio
+```
+
+All queries share the prefix `tw`.
+
+When a user types `tw`, the Query Service navigates to the `tw` node and retrieves matching suggestions.
+
+## 5. Caching
+
+Caching stores frequently requested autocomplete results in memory.
+
+It reduces repeated Trie searches and improves response time.
+
+**Example:**
+
+```text
+Prefix: tw
+
+Cached Results:
+twitter
+twitch
+twilio
+twitter login
+twitter download
+```
+
+Frequently searched prefixes can return cached suggestions directly.
+
+## 6. High-Level Architecture
+
+```text
+                 Users
+                   |
+                   v
+             Query Service
+                   |
+                   v
+              Trie / Cache
+                   |
+                   v
+           Top-k Suggestions
+```
+
+Data Gathering:
+
+```text
+Search Queries
+      |
+      v
+Analytics Logs
+      |
+      v
+Data Gathering Service
+      |
+      v
+Frequency Table
+      |
+      v
+Build Trie
+      |
+      v
+Query Service
+```
+
+## 7. Summary
+
+| Component | Responsibility |
+|---|---|
+| Data Gathering Service | Collect and aggregate search queries |
+| Analytics Logs | Store historical search activity |
+| Frequency Table | Store query popularity |
+| Trie | Efficient prefix-based searching |
+| Query Service | Return top-k suggestions |
+| Cache | Improve lookup speed |
+
+The Data Gathering Service prepares search data, while the Query Service uses the prepared data to provide fast and popular autocomplete suggestions.
