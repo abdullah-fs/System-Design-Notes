@@ -91,3 +91,82 @@ Imagine a cinema platform where:
 - The platform needs significant storage and CDN resources to deliver videos smoothly.
 
 **Goal:** Design a system that efficiently handles video uploads, video playback, storage, and large-scale traffic.
+
+
+
+## Step 2: High-Level Design
+
+### Main Components
+
+1. **Client:** Devices such as smartphones, computers, and smart TVs used to access YouTube.
+<img width="2048" height="2048" alt="image" src="https://github.com/user-attachments/assets/c47b7570-1d16-46f0-9bb5-07dff799fa97" />
+2. **CDN (Content Delivery Network):** Stores and streams videos through geographically distributed edge servers.
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/b27f78b4-1e3a-4207-a2d2-449892ee5221" />
+3. **API Servers:** Handle user interactions such as video uploads and metadata updates, excluding video streaming.
+<img width="813" height="813" alt="image" src="https://github.com/user-attachments/assets/10b6d002-1916-4abb-bf45-8f54682e26d2" />
+4. **Metadata Database:** Stores video information such as title, description, size, and format.
+<img width="512" height="512" alt="image" src="https://github.com/user-attachments/assets/dbe9d754-7dd3-471e-a564-d665bac56b18" />
+5. **Original Storage:** Blob/object storage that stores uploaded original videos.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/268da338-f7f6-4b74-9def-8816569e38d7" />
+6. **Transcoding Servers:** Convert videos into multiple resolutions and formats.
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/5a3a2d0d-67b7-4092-b39b-1a529b8cbd85" />
+7. **Transcoded Storage:** Stores converted videos for CDN distribution.
+<img width="2048" height="2048" alt="image" src="https://github.com/user-attachments/assets/526dbca9-f590-419e-a7c7-00753d1470ab" />
+
+### Core Workflows
+
+#### 1. Video Uploading Flow
+
+**Parallel Processes:**
+- Upload the original video to storage.
+- Send a request to update video metadata.
+
+**Video Upload Steps:**
+
+1. Videos are uploaded to Original Storage.
+2. Transcoding Servers convert videos into multiple formats and resolutions.
+3. After transcoding completes, two processes execute in parallel:
+   - **3a:** Transcoded videos are saved in Transcoded Storage.
+   - **3b:** Transcoding completion events are added to the Completion Queue.
+4. **3a.1:** Videos are distributed to the CDN.
+5. **3b.1:** Completion Handlers process events, update metadata, and notify users.
+
+**Metadata Upload Steps:**
+
+- The client sends a metadata update request in parallel with the video upload.
+- The request contains video information, including:
+  - File name
+  - File size
+  - File format
+  - Title
+  - Description
+- API Servers process the request and store metadata in the Metadata Database.
+
+#### 2. Video Streaming Flow
+
+1. The client requests video content from the CDN.
+2. CDN edge servers deliver videos directly to users.
+3. Nearby edge servers help minimize latency and buffering.
+![Uploading image.png…]()
+
+**Popular Streaming Protocols:**
+
+- **MPEG-DASH:** Adaptive bitrate streaming protocol.
+- **Apple HLS:** HTTP Live Streaming protocol.
+- **Adobe HDS:** HTTP Dynamic Streaming protocol.
+
+Different streaming protocols support different video encodings and playback players.
+
+### Daily-Life Example
+
+Imagine uploading a video to YouTube:
+
+1. **Original Storage:** Your original video is saved.
+2. **Transcoding Servers:** YouTube creates different video qualities, such as 360p, 720p, and 1080p.
+3. **Transcoded Storage:** All converted versions are saved.
+4. **Metadata Database:** Video title, description, and other details are stored.
+5. **Completion Queue:** A notification event is created when transcoding finishes.
+6. **CDN:** Video copies are distributed to servers around the world.
+7. **Client:** Viewers watch the video from their phones, computers, or TVs.
+
+**In short:** Upload → Store → Transcode → Distribute → Stream.
