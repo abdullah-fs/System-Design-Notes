@@ -519,3 +519,139 @@ Query Service
 | Cache | Improve lookup speed |
 
 The Data Gathering Service prepares search data, while the Query Service uses the prepared data to provide fast and popular autocomplete suggestions.
+
+
+
+# Step 3: Design Deep Dive — Trie Data Structure
+
+## 1. Trie Data Structure
+
+A Trie, also called a Prefix Tree, is a tree-like data structure used to store and retrieve strings efficiently.
+
+Queries with common prefixes share the same path.
+
+**Example:**
+
+```text
+apple
+application
+apply
+```
+
+All three queries share the prefix `app`.
+
+## 2. Key Features
+
+### A. Compact Storage
+Trie stores common prefixes only once, reducing repeated character storage.
+
+**Example:**  
+`apple` and `application` share the prefix `app`.
+
+### B. Frequency Information
+Trie nodes can store query frequency to identify popular search queries.
+
+**Example:**
+
+```text
+apple: 1000
+application: 800
+apply: 600
+```
+
+The system uses these frequencies to rank suggestions.
+
+## 3. Steps to Find Top-k Suggestions
+
+1. **Find the Prefix:** Navigate to the node matching the user's input.
+2. **Traverse the Subtree:** Find all valid query strings below the prefix node.
+3. **Sort Results:** Sort matching queries by frequency.
+4. **Select Top-k:** Return the top 5 popular suggestions.
+
+**Example:**
+
+Input: `app`
+
+```text
+apple: 1000
+application: 800
+apply: 600
+app store: 400
+app design: 200
+```
+
+The system returns the top 5 matching queries.
+
+## 4. Trie Optimization: Caching Top-k
+
+Each Trie node can store its top-k popular queries.
+
+This avoids traversing the entire subtree and sorting results for every request.
+
+**Example:**
+
+```text
+Prefix: app
+
+Cached Top 5:
+apple
+application
+apply
+app store
+app design
+```
+
+When the user types `app`, the system directly returns cached suggestions.
+
+## 5. Limit Prefix Length
+
+The system can limit the maximum prefix length to reduce the search space.
+
+**Example:**
+
+```text
+Maximum prefix length = 50 characters
+```
+
+This prevents excessively long input from increasing processing costs.
+
+## 6. Trie Operations
+
+### A. Create
+- Build the Trie weekly.
+- Use aggregated query data from Analytics Logs or Database.
+- Store query frequencies in Trie nodes.
+
+**Example:**  
+Weekly search logs are processed to generate a new Trie.
+
+### B. Update
+- Trie is rarely updated in real-time.
+- Weekly updates replace the old Trie with a new one.
+
+**Example:**  
+A newly generated Trie replaces the previous week's Trie.
+
+### C. Delete
+- Use a filtering layer to remove unwanted or harmful suggestions.
+- Filters can block hate speech or offensive queries.
+- Physically delete unwanted queries asynchronously.
+
+**Example:**  
+A harmful query is immediately blocked by the filter and later removed from the database in the background.
+
+## Summary
+
+| Topic | Description |
+|---|---|
+| Trie | Prefix-based tree structure |
+| Compact Storage | Common prefixes are shared |
+| Frequency | Stores query popularity |
+| Top-k Search | Find prefix, traverse, sort, return top-k |
+| Caching | Stores top-k queries at each node |
+| Prefix Limit | Restricts maximum input length |
+| Create | Build Trie from aggregated data |
+| Update | Replace old Trie periodically |
+| Delete | Filter unwanted queries and delete asynchronously |
+
+Trie provides efficient prefix searching, while caching top-k results improves autocomplete response time.
