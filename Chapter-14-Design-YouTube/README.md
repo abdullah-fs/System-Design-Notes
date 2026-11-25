@@ -236,3 +236,96 @@ Imagine uploading a video to YouTube.
 - **Watermark:** A logo can be added as an overlay.
 
 **In short:** Video Transcoding → Encoding → Thumbnail Generation → Watermarking → Ready for Playback.
+
+
+
+# Video Transcoding Architecture
+
+Video Transcoding Architecture processes uploaded videos by dividing them into smaller tasks, scheduling those tasks, allocating resources, and producing transcoded videos ready for distribution.
+
+## 1. Preprocessor
+
+The Preprocessor prepares videos for transcoding. It has four main responsibilities:
+
+- **Video Splitting:** Divides videos into smaller chunks called Groups of Pictures (GOPs).
+- **GOP Alignment:** Splits videos according to GOP boundaries to support older clients.
+- **DAG Generation:** Generates a Directed Acyclic Graph (DAG) using configuration files written by client programmers. The DAG defines tasks and their dependencies.
+- **Temporary Storage:** Stores GOPs and metadata temporarily so failed encoding tasks can be retried without repeating earlier processing.
+
+## 2. DAG Scheduler
+
+The DAG Scheduler organizes tasks into sequential or parallel stages.
+
+- Divides the DAG into different stages.
+- Places tasks into the Resource Manager's Task Queue.
+- Ensures dependent tasks execute in the correct order.
+- Allows independent tasks to run in parallel.
+
+**Example Stages:**
+- **Stage 1:** Processes video, audio, and metadata.
+- **Stage 2:** Splits video processing into video encoding and thumbnail generation.
+
+## 3. Resource Manager
+
+The Resource Manager efficiently allocates system resources. It contains three queues and a Task Scheduler.
+
+- **Task Queue:** A priority queue containing pending tasks.
+- **Worker Queue:** A priority queue containing worker availability and utilization information.
+- **Running Queue:** Tracks currently running tasks and the workers executing them.
+- **Task Scheduler:** Selects suitable tasks and workers, then assigns tasks to workers.
+
+## 4. Task Workers
+
+Task Workers execute the assigned processing tasks.
+
+Examples include:
+- Video encoding
+- Thumbnail generation
+- Watermarking
+- Audio processing
+
+Different workers can perform different types of tasks.
+
+## 5. Temporary Storage
+
+Temporary Storage keeps intermediate processing data.
+
+- Stores GOPs and metadata.
+- Supports retry operations when processing fails.
+- Storage selection depends on data type, size, access frequency, and lifespan.
+
+## 6. Output
+
+After all required tasks are completed, the system produces transcoded videos.
+
+These videos are available in different resolutions and formats and are ready for distribution through the CDN.
+
+## Complete Workflow
+
+1. **Original Video:** The user uploads a video.
+2. **Preprocessor:** Splits the video into GOPs and generates the DAG.
+3. **DAG Scheduler:** Organizes tasks into processing stages.
+4. **Resource Manager:** Assigns tasks to suitable workers.
+5. **Task Workers:** Perform encoding, thumbnail generation, watermarking, and other operations.
+6. **Temporary Storage:** Keeps intermediate data for retry operations.
+7. **Output:** Produces transcoded videos ready for CDN distribution.
+
+## Daily-Life Example
+
+When a user uploads a video to YouTube:
+
+1. The Preprocessor divides the video into smaller chunks.
+2. The DAG Scheduler organizes the required processing tasks.
+3. The Resource Manager assigns tasks to available workers.
+4. Task Workers generate different video qualities and thumbnails.
+5. Temporary Storage keeps intermediate data in case a task fails.
+6. The final transcoded videos become ready for CDN distribution.
+
+## Summary
+
+- **Preprocessor:** Splits videos and generates DAGs.
+- **DAG Scheduler:** Organizes tasks into stages.
+- **Resource Manager:** Allocates tasks and workers.
+- **Task Workers:** Execute processing tasks.
+- **Temporary Storage:** Stores intermediate data for retries.
+- **Output:** Produces videos ready for distribution.
