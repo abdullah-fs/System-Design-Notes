@@ -278,3 +278,78 @@ Important concepts:
 - Caching
 - Scalability
 - Low latency
+
+
+
+# Step 1: Understanding the Problem
+
+## Requirements
+
+### 1. Real-Time Suggestions
+Display relevant autocomplete suggestions as the user types.
+
+**Example:**  
+Input: `pro`  
+Suggestions: `programming`, `project ideas`, `product design`
+
+### 2. Top-k Results
+Return up to 5 suggestions, sorted by popularity.
+
+- k = 5
+- Higher search frequency means higher ranking.
+
+**Example:**
+```text
+programming: 5000
+project ideas: 4000
+product design: 3000
+```
+
+The system returns the top 5 matching queries.
+
+### 3. Scalability
+The system must support:
+- 10 million DAU (Daily Active Users).
+- Peak QPS of 48,000.
+
+**Example:**  
+The system must handle 48,000 autocomplete requests per second during peak traffic.
+
+### 4. High Availability
+The system must remain available even when servers fail.
+
+- Use multiple servers.
+- Use load balancing.
+- Redirect traffic when a server fails.
+
+**Example:**  
+If Server A fails, the Load Balancer sends requests to Server B.
+
+### 5. Data Growth
+New query data grows by 0.4 GB per day.
+
+| Duration | Data Growth |
+|---|---:|
+| 1 day | 0.4 GB |
+| 30 days | 12 GB |
+| 1 year | 146 GB |
+
+**Calculation:**
+```text
+0.4 GB × 365 = 146 GB/year
+```
+
+The system must support continuous storage growth.
+
+## Summary
+
+| Requirement | Value |
+|---|---|
+| Maximum Suggestions | 5 |
+| Daily Active Users | 10 Million |
+| Peak QPS | 48,000 |
+| Availability | High |
+| Daily Data Growth | 0.4 GB |
+| Yearly Data Growth | 146 GB |
+
+The system should provide fast, popular autocomplete suggestions while handling high traffic, server failures, and growing data.
