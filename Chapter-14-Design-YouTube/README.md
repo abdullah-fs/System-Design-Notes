@@ -170,3 +170,69 @@ Imagine uploading a video to YouTube:
 7. **Client:** Viewers watch the video from their phones, computers, or TVs.
 
 **In short:** Upload → Store → Transcode → Distribute → Stream.
+
+
+
+## Step 3: Design Deep Dive
+
+### Video Transcoding
+
+Video transcoding converts uploaded videos into different formats, resolutions, and bitrates for efficient storage and playback.
+
+### 1. Importance of Video Transcoding
+
+1. **Reduce Storage Space:** Compresses raw videos to reduce storage requirements.
+2. **Device Compatibility:** Ensures videos work across different devices and browsers.
+3. **Adapt to Network Conditions:** Provides different video qualities based on network speed.
+
+### 2. Components
+
+#### Container
+- A file format that encapsulates video, audio, and metadata.
+- Examples: MP4, AVI, MKV.
+
+#### Codecs
+- Compression and decompression algorithms for video and audio.
+- Help reduce storage space and bandwidth usage.
+- Examples: H.264, VP9.
+
+**Difference:**
+- Container packages video, audio, and metadata together.
+- Codec compresses and decompresses video or audio.
+
+### 3. Directed Acyclic Graph (DAG) Model
+
+- Video transcoding is computationally expensive and time-consuming.
+- DAG organizes video processing tasks into a dependency graph.
+- Allows independent tasks to execute in parallel.
+- Improves processing efficiency and reduces overall processing time.
+
+#### Processing Tasks
+
+The original video is split into video, audio, and metadata components.
+
+**A. Video Encoding**
+- Converts videos into different resolutions.
+- Supports multiple codecs and bitrates.
+- Example: 360p, 720p, and 1080p.
+
+**B. Thumbnail Generation**
+- Generates a thumbnail for the video.
+- Users can upload their own thumbnails or the system can generate them automatically.
+
+**C. Watermarking**
+- Adds an image or logo overlay to the video.
+- Can contain branding or identifying information.
+
+### Daily-Life Example
+
+Imagine uploading a video to YouTube.
+
+- **Transcoding:** YouTube creates different quality versions of your video.
+- **Container:** MP4 packages video, audio, and metadata together.
+- **Codec:** H.264 compresses the video to reduce its size.
+- **DAG:** Different processing tasks are organized and executed in parallel.
+- **Thumbnail:** YouTube creates a preview image for your video.
+- **Watermark:** A logo can be added as an overlay.
+
+**In short:** Video Transcoding → Encoding → Thumbnail Generation → Watermarking → Ready for Playback.
