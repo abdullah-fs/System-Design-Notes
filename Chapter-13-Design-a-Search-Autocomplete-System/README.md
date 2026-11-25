@@ -655,3 +655,88 @@ A harmful query is immediately blocked by the filter and later removed from the 
 | Delete | Filter unwanted queries and delete asynchronously |
 
 Trie provides efficient prefix searching, while caching top-k results improves autocomplete response time.
+
+
+
+# Query Processing Flow
+
+## 1. Prefix Search
+
+- Identify the Trie node matching the user's input prefix.
+- Traverse the subtree to collect valid suggestions.
+
+**Example:**  
+Input: `pro`  
+Matching queries: `programming`, `product`, `profile`
+
+## 2. Top-k Sorting
+
+- Rank matching queries by frequency.
+- Return the top 5 suggestions.
+- Cache top-k queries at each Trie node to reduce sorting overhead.
+
+**Example:**
+
+```text id="j2b7qk"
+programming: 5000
+product: 3000
+profile: 2000
+```
+
+The system ranks `programming` first.
+
+## 3. Response Construction
+
+- Construct the response using cached suggestions.
+- Return results quickly to the user.
+
+**Example:**  
+Input: `pro` → Return the cached top 5 suggestions.
+
+# Optimizations
+
+## 1. Cache at Each Node
+
+Store the top-k popular queries at each Trie node.
+
+This avoids repeated subtree traversal and sorting.
+
+**Example:**  
+The `pro` node stores its top 5 suggestions for direct retrieval.
+
+## 2. Limit Prefix Length
+
+Set a maximum prefix length, such as 50 characters.
+
+This reduces unnecessary processing for very long inputs.
+
+**Example:**  
+Maximum prefix length = 50 characters.
+
+## 3. AJAX Requests
+
+Use lightweight asynchronous requests to fetch suggestions without reloading the page.
+
+**Example:**  
+When a user types `pro`, the browser sends an AJAX request and updates suggestions dynamically.
+
+## 4. Browser Caching
+
+Store frequently requested autocomplete results in the browser cache.
+
+This reduces repeated server requests and improves response time.
+
+**Example:**  
+Previously requested suggestions for `pro` can be displayed from browser cache.
+
+## Summary
+
+| Concept | Purpose |
+|---|---|
+| Prefix Search | Find matching queries |
+| Top-k Sorting | Rank popular suggestions |
+| Response Construction | Return results quickly |
+| Node Cache | Avoid repeated traversal and sorting |
+| Prefix Limit | Reduce search processing |
+| AJAX | Fetch suggestions without page reload |
+| Browser Cache | Reduce repeated server requests |
