@@ -140,3 +140,131 @@ Non-functional requirements define how well the system should operate.
 
 **Note:** The 500 PB storage requirement is a given assumption. Calculating it requires additional information, such as total users, average storage usage, and data retention period.
 
+
+
+
+## Step 2: High-Level Design
+
+### 1. Single-Server Setup
+
+A basic system consists of:
+
+- **Web Server:** Handles file upload and download requests.
+- **Metadata Database:** Stores user information, file names, paths, and other metadata.
+- **Storage Directory:** Stores actual files organized by user namespaces.
+
+#### Namespaces
+
+- A root directory `drive/` contains separate directories for each user.
+- Each namespace stores files belonging to a specific user.
+- A file can be identified using its namespace and relative path.
+
+Example:
+
+```text
+drive/
+  user101/
+    assignment.pdf
+    notes.docx
+  user202/
+    photo.jpg
+```
+
+**Limitation:** A single server cannot efficiently handle unlimited storage and traffic. It also creates a single point of failure.
+
+### 2. APIs
+
+#### File Upload
+
+- **Simple Upload:** Used for small files uploaded in a single request.
+- **Resumable Upload:** Used for large files that may require multiple requests.
+
+Resumable upload process:
+
+1. Client initiates an upload session.
+2. Server returns a resumable URL.
+3. Client uploads file data.
+4. Interrupted uploads can resume from the last uploaded position.
+
+#### File Download
+
+Allows users to retrieve files from cloud storage after authorization.
+
+#### Get File Revisions
+
+Returns the previous versions of a file.
+
+### 3. Moving to Distributed Systems
+
+#### Sharding
+
+- Divides data across multiple servers.
+- Storage can be partitioned based on `user_id`.
+
+#### Cloud Storage
+
+- Stores actual files in scalable object storage, such as Amazon S3.
+- Supports redundancy and cross-region replication.
+
+#### Load Balancer
+
+Distributes incoming requests across multiple API servers to prevent overload.
+
+#### Metadata Database Replication
+
+Maintains database replicas to improve availability and reliability.
+
+### 4. Sync Conflicts
+
+A sync conflict occurs when multiple users modify the same file simultaneously.
+
+- The first update is accepted by the server.
+- The second update may conflict with the latest server version.
+- The system preserves conflicting copies.
+- Users can merge changes or choose which version to keep.
+<img width="1616" height="508" alt="image" src="https://github.com/user-attachments/assets/c1b3f140-6bfa-4400-a1d5-358c3ceb3577" />
+
+### 5. Improved High-Level Design
+<img width="800" height="549" alt="image" src="https://github.com/user-attachments/assets/df231d31-837e-41f4-947f-5475261db518" />
+
+#### Block Servers
+
+- Split files into smaller blocks.
+- Maximum block size: **4 MB**.
+- Assign each block a unique hash.
+- Store blocks independently.
+- Reconstruct files by combining blocks in the correct order.
+
+#### Cloud Storage
+
+Stores file blocks with scalable and redundant storage.
+
+#### Cold Storage
+
+Moves inactive files to cheaper storage to reduce storage costs.
+
+#### API Servers
+
+Handle authentication, user profiles, file metadata, and other non-upload workflows.
+
+#### Metadata Database and Cache
+
+- Stores metadata for users, files, blocks, and versions.
+- Cache frequently accessed metadata for faster retrieval.
+
+#### Notification Service
+
+Uses a publisher/subscriber system to notify clients about file changes, such as additions, edits, and deletions.
+
+#### Offline Backup Queue
+
+Stores file change information for offline clients so they can synchronize when they reconnect.
+
+### Key Design Benefits
+
+- **Scalability:** Distributes storage and traffic across multiple servers.
+- **Reliability:** Replication helps protect against server failures.
+- **Bandwidth Efficiency:** Block-based uploads can reduce unnecessary data transfer.
+- **Availability:** Load balancing and database replication help keep the service accessible.
+- **Cost Efficiency:** Cold storage reduces the cost of storing inactive files.
+
