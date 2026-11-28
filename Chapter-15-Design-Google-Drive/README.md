@@ -95,3 +95,48 @@ A message queue can process notification events asynchronously, allowing file op
 - **Message Queue:** Handles asynchronous events.
 - **Notification Service:** Sends notifications to users.
 
+
+
+
+## Step 1: Understanding the Problem
+
+### Functional Requirements
+
+Functional requirements define what the system should do.
+
+- **File Upload and Download:** Users can upload and download files.
+- **File Sync:** Keep files synchronized across multiple devices.
+- **Revision History:** Maintain previous versions of files.
+- **File Sharing:** Allow users to share files with different permissions.
+- **Notifications:** Notify users about file edits, deletions, and shares.
+
+### Non-Functional Requirements
+
+Non-functional requirements define how well the system should operate.
+
+- **Reliability:** Prevent data loss and ensure files are safely stored.
+- **Fast Sync Speed:** Synchronize file changes quickly across devices.
+- **Bandwidth Efficiency:** Minimize unnecessary data transfers.
+- **Scalability:** Support 10 million daily active users (DAU).
+- **High Availability:** Keep the service accessible during server failures.
+
+### Constraints and Assumptions
+
+| Constraint | Value |
+|---|---|
+| Free Storage per User | 10 GB |
+| Maximum File Size | 10 GB |
+| Average Upload Size | 500 KB |
+| Upload Frequency | 2 files per user per day |
+| Total Storage Requirement | 500 PB |
+
+### Key Design Considerations
+
+- Large files may be uploaded in smaller chunks.
+- File changes should synchronize efficiently across devices.
+- Distributed storage can help handle large storage requirements.
+- Replication and redundancy can improve reliability and availability.
+- The system should scale to support millions of users.
+
+**Note:** The 500 PB storage requirement is a given assumption. Calculating it requires additional information, such as total users, average storage usage, and data retention period.
+
