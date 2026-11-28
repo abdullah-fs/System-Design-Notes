@@ -399,3 +399,35 @@ It can:
 - Update subscriptions when friends are added or removed.
 - Use Geohash channels to support nearby random people.
 - Erlang is a possible alternative to Redis Pub/Sub.
+
+
+
+
+## Step 4: Wrap Up
+
+We designed a scalable Nearby Friends system that supports frequently changing user locations and low-latency nearby friend discovery.
+
+### Core Components
+
+- **WebSocket Servers:** Provide real-time, bidirectional communication between clients and the backend.
+- **Redis:** Enables fast location reads and writes, stores active user locations, and provides Pub/Sub channels for distributing location updates.
+
+### Scaling and Advanced Features
+
+We explored:
+
+- Scaling REST API and WebSocket servers.
+- Scaling the user database and location cache.
+- Distributing Redis Pub/Sub to handle millions of location pushes per second.
+- Service discovery using ZooKeeper or etcd.
+- Consistent hashing to minimize channel movement during scaling.
+- Updating subscriptions when friends are added or removed.
+- Handling users with a large number of friends.
+- Geohash-based Pub/Sub channels for nearby random people.
+- Erlang as an alternative to Redis Pub/Sub.
+
+### Example
+
+When a user shares their location, the WebSocket server receives the update, stores the latest location in Redis, publishes it to the user's channel, and forwards it to relevant nearby friends.
+
+This design supports scalable, low-latency location sharing for a large number of active users.
