@@ -268,3 +268,91 @@ Stores file change information for offline clients so they can synchronize when 
 - **Availability:** Load balancing and database replication help keep the service accessible.
 - **Cost Efficiency:** Cold storage reduces the cost of storing inactive files.
 
+
+
+
+## Step 3: Design Deep Dive
+
+### 1. Metadata Database
+
+The metadata database stores information about users, files, blocks, and file versions.
+
+#### Main Tables
+
+- **User Table:** Stores user profiles and preferences.
+- **File Table:** Stores file metadata such as name, size, owner, and path.
+- **Block Table:** Tracks file blocks and their storage locations.
+- **File Version Table:** Maintains file revision history.
+
+Actual file content is stored in cloud storage, while metadata is stored in the database.
+
+### 2. File Upload Flow
+
+1. **File Upload:** Files are split into blocks, compressed, and encrypted by the block server.
+2. **Block Storage:** Blocks are uploaded to cloud storage such as Amazon S3.
+3. **Metadata Upload:** Client sends file metadata to the API server.
+4. **Pending Status:** Metadata is stored with status `pending`.
+5. **Completion:** After successful block storage, file status changes to `uploaded`.
+6. **Notification:** Relevant users are notified about the file update.
+
+### 3. File Sync
+
+#### Delta Sync
+
+Transfers only modified blocks instead of uploading the entire file again.
+
+#### Compression
+
+Reduces block size to save bandwidth. Compression efficiency depends on the file type.
+
+#### Conflict Resolution
+
+- The first processed update is accepted.
+- Conflicting versions are preserved separately.
+- Users can merge changes or choose a version.
+
+### 4. File Download Flow
+
+1. **Trigger:** Notification service informs online clients about file changes.
+2. **Metadata Fetch:** Client retrieves updated metadata through API servers.
+3. **Block Download:** Client downloads required blocks.
+4. **File Reconstruction:** Blocks are combined in the correct order.
+
+Offline clients retrieve pending changes when they reconnect.
+
+### 5. Notification Service
+
+- Keeps clients informed about file changes.
+- Uses long polling for asynchronous notifications.
+- Notifies relevant clients about file additions, edits, and deletions.
+
+### 6. Storage Optimization
+
+#### De-duplication
+
+Identifies duplicate blocks using hash-based comparisons to reduce storage usage.
+
+#### Versioning Strategy
+
+Limits or manages saved revisions to control storage costs while preserving useful versions.
+
+#### Cold Storage
+
+Moves rarely accessed files to cheaper storage, such as Amazon S3 Glacier.
+
+### 7. Failure Handling
+
+- **Load Balancer Failure:** Activate a secondary load balancer.
+- **Block Server Failure:** Reassign pending tasks to healthy servers.
+- **Metadata Database Failure:** Promote a replica to primary and redirect traffic.
+- **Cloud Storage Failure:** Retrieve data from replicated storage in another region.
+- **Notification Service Failure:** Clients reconnect to alternative servers.
+
+### Key Design Concepts
+
+- Metadata and actual file content are stored separately.
+- Block-based storage supports efficient file transfer.
+- Delta sync reduces unnecessary bandwidth usage.
+- Notifications keep clients synchronized.
+- Replication improves reliability and availability.
+- De-duplication and cold storage reduce storage costs.
