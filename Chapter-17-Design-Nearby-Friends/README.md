@@ -264,3 +264,138 @@ Cassandra is suitable for write-heavy workloads because the system receives freq
 - Cassandra stores historical location data for write-heavy workloads.
 - Fan-out forwards location updates only to relevant nearby friends.
 - Approximately 40 online friends may be potential recipients per update, before distance filtering.
+
+
+
+
+## Step 3: Design Deep Dive
+
+### Scaling Individual Components
+
+| Component | Scaling Strategy |
+|---|---|
+| **API Servers** | Scale horizontally using autoscaling groups and replicated instances. |
+| **WebSocket Servers** | Scale horizontally while gracefully draining existing connections before removing servers. |
+| **User Database** | Shard by `user_id`; user and friendship data can be exposed through a dedicated service. |
+| **Location Cache** | Distribute Redis cache across multiple nodes; TTL limits active location data. |
+| **Redis Pub/Sub** | Pre-allocate user channels to reduce channel initialization overhead. |
+
+**Example:** Before removing a WebSocket server, mark it as `draining` in the load balancer, stop accepting new connections, and allow existing connections to close gracefully.
+
+### Client Initialization
+
+When a client connects to a WebSocket server:
+
+1. Fetch the user's friends.
+2. Subscribe to their Redis Pub/Sub channels.
+3. Fetch their latest locations from the cache.
+4. Send the initial nearby friends list to the client.
+
+**Example:** When a user opens the app, the server loads friends' latest locations and sends the initial map data.
+
+### Scaling Redis Pub/Sub
+
+Estimated requirements from the course:
+
+- Approximately **200 GB memory** for Pub/Sub channels.
+- 2 Redis servers with 100 GB each for channel memory.
+- Approximately **14 million location pushes per second**.
+- A Redis server handles approximately 100,000 pushes/second.
+
+Required servers for push throughput:
+
+`14,000,000 / 100,000 = 140 Redis servers`
+
+Therefore, approximately **140 Redis servers** are required for the estimated push throughput, excluding additional capacity for redundancy and operational overhead.
+
+**Example:** Having enough Redis memory does not guarantee enough processing capacity. The cluster must handle both channel storage and a high volume of message pushes.
+
+### Service Discovery
+
+A distributed Redis cluster needs service discovery to track:
+
+- Which Redis servers are alive.
+- Which server hosts a particular channel.
+- Where WebSocket servers should publish or subscribe.
+
+ZooKeeper or etcd can store channel distribution information.
+
+WebSocket servers can cache hash ring data in memory to locate channels efficiently.
+
+**Example:** Service discovery acts like a directory that tells a WebSocket server which Redis node contains a user's channel.
+
+### Scaling the Redis Cluster
+
+- Use historical traffic data to schedule daily scaling.
+- Overprovision capacity to handle traffic spikes.
+- Treat the Redis Pub/Sub cluster as stateful because channels and subscriptions require coordination.
+- Perform scaling operations during low-traffic periods when possible.
+
+Potential scaling issues:
+
+1. WebSocket servers may need to resubscribe when channels move.
+2. Some location updates may be missed during migration.
+3. Subscribers must be handed off to newly provisioned servers.
+4. Channel movement should be minimized.
+
+### Consistent Hashing
+
+Consistent hashing minimizes the number of channels moved when Redis servers are added or removed.
+
+**Example:** When one Redis server is removed from a cluster, consistent hashing remaps only a portion of the channels instead of redistributing all channels.
+
+### Adding and Removing Friends
+
+When a friend is added or removed:
+
+- The affected WebSocket server subscribes to or unsubscribes from the friend's channel.
+- The mobile client can use callbacks for friend-added and friend-removed events.
+- The client sends the appropriate message to the WebSocket server.
+
+**Example:** When a user adds a new friend, the client sends the friend's ID to the server, which subscribes to that friend's location channel.
+
+### Users with Many Friends
+
+Users with a very large number of friends are called **whale users**.
+
+Possible solution:
+
+- Set a maximum friend limit, such as 5,000.
+- Ensure enough WebSocket servers are available to handle high fan-out load.
+
+**Example:** A user with thousands of friends may generate much more location-update traffic than an average user.
+
+### Nearby Random Person Feature
+
+To show nearby random people, use Geohash-based Pub/Sub channels.
+
+- Create channels based on Geohash cells.
+- Users subscribe to the channel corresponding to their current location.
+- Location updates are published to the relevant Geohash channel.
+- Subscribe to neighboring Geohash cells to handle boundary cases.
+
+**Example:** A person in an adjacent Geohash cell may be only 100 meters away. Subscribing to neighboring cells helps discover them.
+
+### Alternative to Redis Pub/Sub: Erlang
+
+Erlang is a programming language designed for distributed and concurrent applications.
+
+It can:
+
+- Spawn millions of lightweight processes.
+- Handle WebSocket connections.
+- Manage Pub/Sub communication within a distributed application.
+
+**Challenge:** Erlang is a niche language, so finding experienced developers may be difficult.
+
+### Key Takeaways
+
+- Scale API and WebSocket servers horizontally.
+- Gracefully drain WebSocket servers before removing them.
+- Shard user data by `user_id`.
+- Use distributed Redis nodes to handle high Pub/Sub throughput.
+- Use ZooKeeper or etcd for service discovery.
+- Use consistent hashing to minimize channel movement.
+- Update subscriptions when friends are added or removed.
+- Use Geohash channels to support nearby random people.
+- Erlang is a possible alternative to Redis Pub/Sub.
