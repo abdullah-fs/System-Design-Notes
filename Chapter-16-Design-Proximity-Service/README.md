@@ -403,3 +403,147 @@ Use Geohash instead of exact GPS coordinates to group nearby locations into geog
 - **Geospatial Index:** Use read replicas if the index fits on a single server.
 - **Caching:** Use Geohash instead of exact GPS coordinates as the location-based cache key.
 - Cache business IDs by Geohash and business details by Business ID.
+
+
+
+
+# Chapter 16: Proximity Service
+
+## Step 5: Deployment Strategy and Final Architecture
+
+### 1. Region and Availability Zones
+
+- Deploy LBS and Business Service across multiple regions.
+- Use multiple availability zones to improve availability.
+- If one region or availability zone fails, other regions can continue serving requests.
+
+### 2. Handling Real-Time Updates
+
+- Business updates are processed in daily batches.
+- Updates are collected and processed together.
+- Geospatial indexes and related cached data are updated accordingly.
+- Real-time business updates are not required.
+
+### 3. Steps to Retrieve Nearby Businesses
+<img width="1400" height="781" alt="image" src="https://github.com/user-attachments/assets/330186b9-413f-4573-a850-6e69b6de9cba" />
+
+
+#### Step 1: User Request
+
+- User searches for restaurants within a 500-meter radius.
+- Client sends the following information to the Load Balancer:
+
+```text
+Latitude: 37.776720
+Longitude: -122.416730
+Radius: 500m
+```
+
+#### Step 2: Request Forwarding
+
+- Load Balancer forwards the request to the Location-Based Service (LBS).
+
+#### Step 3: Geohash Calculation
+
+- LBS calculates the Geohash of the user's location.
+- Selects the appropriate Geohash precision based on the search radius.
+- According to the reference table, 500m corresponds to Geohash length 6.
+
+#### Step 4: Fetching Neighboring Geohashes
+
+- LBS calculates the current Geohash and its 8 neighboring Geohashes.
+- Searches all 9 Geohash cells to avoid missing nearby businesses located across cell boundaries.
+
+```text
+[
+  my_geohash,
+  neighbor1,
+  neighbor2,
+  neighbor3,
+  neighbor4,
+  neighbor5,
+  neighbor6,
+  neighbor7,
+  neighbor8
+]
+```
+
+#### Step 5: Fetching Business IDs from Redis
+
+- LBS queries the Geohash Redis server for business IDs.
+- Queries for multiple Geohash cells are executed in parallel to reduce latency.
+- Returns candidate business IDs from the matching cells.
+
+#### Step 6: Retrieving and Ranking Businesses
+
+- LBS fetches complete business details from the Business Info Redis server.
+- Calculates the distance between each business and the user's location.
+- Filters businesses outside the requested radius.
+- Sorts the remaining businesses by distance (nearest first).
+- Returns ranked results to the client.
+
+### 4. Complete Request Flow
+
+```text
+Client
+  |
+  v
+Load Balancer
+  |
+  v
+Location-Based Service (LBS)
+  |
+  v
+Geohash Calculation
+  |
+  v
+Current + 8 Neighboring Geohashes
+  |
+  v
+Geohash Redis
+  |
+  v
+Business IDs
+  |
+  v
+Business Info Redis
+  |
+  v
+Distance Calculation & Ranking
+  |
+  v
+Ranked Results to Client
+```
+
+### Key Takeaway
+
+- **Multi-Region Deployment:** Improves availability and fault tolerance.
+- **Batch Processing:** Handles business updates daily.
+- **Geohash:** Identifies relevant geographic cells.
+- **Redis:** Quickly retrieves business IDs and details.
+- **Distance Calculation:** Filters and ranks businesses based on actual distance.
+
+
+
+
+## Key Optimizations
+
+1. **Parallel Redis Calls:** Sends multiple Redis requests simultaneously to reduce response time.
+2. **Geohash Indexing:** Enables efficient spatial queries for nearby businesses.
+3. **Caching:** Stores business IDs and business details in Redis to reduce database queries.
+
+These optimizations provide low-latency and scalable proximity searches.
+
+## Choosing the Best Indexing Method
+
+| Indexing Method | Pros | Cons |
+|---|---|---|
+| **Geohash** | Easy to implement and efficient for proximity searches. | Boundary issues and fixed grid sizes. |
+| **Quadtree** | Dynamically adjusts to data density and supports K-nearest queries. | More complex and requires tree maintenance. |
+| **Google S2** | Supports advanced geospatial operations and geofencing. | Harder to implement. |
+
+### References
+
+1. [Geohash Algorithm](https://www.movable-type.co.uk/scripts/geohash.html)
+2. [Quadtree Indexing](https://en.wikipedia.org/wiki/Quadtree)
+3. [Google S2 Geometry](https://s2geometry.io/)
