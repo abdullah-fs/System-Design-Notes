@@ -242,6 +242,15 @@ A Quadtree is a tree data structure that recursively divides a 2D space into fou
 - Deploy updates incrementally across servers.
 - Business additions and updates require tree updates or rebuilding.
 - On-the-fly updates are possible but require more complex logic and locking mechanisms.
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/0701882d-2a78-4625-9477-aaf28ff27ba2" />
+<img width="1200" height="685" alt="image" src="https://github.com/user-attachments/assets/68279bd2-521c-4389-9eae-4c96fc0f9419" />
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/6ff34f0d-38aa-4424-8817-094e7a1044f2" />
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/ceb566c7-a1cd-4d87-a341-a6c684e1d3c3" />
+<img width="1500" height="1496" alt="image" src="https://github.com/user-attachments/assets/dcf6b336-daba-4228-a615-3aa8039a4e0b" />
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/45178987-597e-44d8-aa39-d18abffd3d4c" />
+<img width="2414" height="2414" alt="image" src="https://github.com/user-attachments/assets/1b15ca0f-aaa9-4581-a4b8-8c2386d09b0c" />
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/239d2a7c-4135-4d16-98e2-fab32eb725d6" />
+<img width="1121" height="1081" alt="image" src="https://github.com/user-attachments/assets/2e8f8b01-324e-454a-947c-8ffcfeb8f9e7" />
 
 ### 5. Google S2
 
@@ -262,6 +271,18 @@ Google S2 is a geospatial indexing system that maps Earth's spherical surface in
 **Geofencing:**
 - Defines a virtual boundary around a geographic area.
 - Applications can trigger actions when users enter or leave that area.
+<img width="1161" height="855" alt="image" src="https://github.com/user-attachments/assets/02c44f2d-6da6-4a70-a069-a76512d80bca" />
+<img width="900" height="742" alt="image" src="https://github.com/user-attachments/assets/08edf5ed-db9c-4e25-bdae-bd2d4583700f" />
+<img width="2048" height="1536" alt="image" src="https://github.com/user-attachments/assets/72e585d0-2d15-4339-afd3-7e9dffcbd5bf" />
+<img width="3840" height="2787" alt="image" src="https://github.com/user-attachments/assets/a221603a-56da-4152-b418-7ac22fc86aae" />
+<img width="593" height="588" alt="image" src="https://github.com/user-attachments/assets/6380d894-41fa-4f3e-bc6d-608d49608e31" />
+<img width="1454" height="826" alt="image" src="https://github.com/user-attachments/assets/bd7d8fd4-2e7c-40f8-ba56-96a22150a655" />
+<img width="924" height="752" alt="image" src="https://github.com/user-attachments/assets/670cfa81-aa61-4c19-8f11-17aaf6637d52" />
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/bee28975-f815-4cce-85d0-f213af5acee2" />
+<img width="1351" height="702" alt="image" src="https://github.com/user-attachments/assets/453bd8d6-99d2-4363-9498-b7065987f234" />
+<img width="1914" height="1658" alt="image" src="https://github.com/user-attachments/assets/a765353b-f5b7-40ce-b78e-f070f71dc34a" />
+<img width="2048" height="1536" alt="image" src="https://github.com/user-attachments/assets/12775b51-3422-4d26-864a-4904d6af135f" />
+<img width="1349" height="888" alt="image" src="https://github.com/user-attachments/assets/1cddbd8e-3ee0-4d9c-8f99-83c380bcf77a" />
 
 ### Algorithm Comparison
 
