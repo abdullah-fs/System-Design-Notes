@@ -26,3 +26,53 @@ The main challenge is handling continuously changing user locations while provid
 - Maintaining low-latency responses.
 - Scaling with a large number of active users.
 
+
+
+## Step 1: Understand the Problem and Establish Design Scope
+
+### Design Assumptions
+
+| Question | Assumption |
+|---|---|
+| Nearby radius | 5 miles (configurable) |
+| Distance calculation | Straight-line distance |
+| Total users | 1 billion |
+| Feature adoption | 10% of total users |
+| Location history | Stored for future ML use cases |
+| Inactive users | Disappear after 10 minutes |
+| GDPR compliance | Not considered in this simplified design |
+
+### Functional Requirements
+
+1. Users can see nearby friends on their mobile app.
+2. Each friend displays distance and location update timestamp.
+3. Nearby friends list refreshes every few seconds.
+
+### Non-Functional Requirements
+
+- **Low Latency:** Location updates should be received with minimal delay.
+- **Reliability:** Occasional data point loss is acceptable, but the system should remain generally available.
+- **Eventual Consistency:** A few seconds of replication delay is acceptable; strong consistency is not required.
+
+### Back-of-the-Envelope Estimation
+
+| Metric | Estimation |
+|---|---:|
+| Nearby radius | 5 miles |
+| Location refresh interval | 30 seconds |
+| Daily active feature users | 100 million |
+| Concurrent users (10%) | 10 million |
+| Average friends per user | 400 |
+| Friends displayed per page | 20 |
+
+### Location Update QPS
+
+Assuming 10 million concurrent users update their locations every 30 seconds:
+
+Location Update QPS = 10,000,000 / 30
+
+**Approximately 334,000 updates per second.**
+
+### Key Challenge
+
+The system must efficiently handle approximately 334K location updates per second while providing low-latency nearby friend discovery.
