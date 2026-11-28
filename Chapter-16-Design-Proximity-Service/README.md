@@ -53,8 +53,6 @@ Note: Peak-hour traffic can be significantly higher than average QPS, so the sys
 
 
 
-# Chapter 16: Proximity Service
-
 ## Step 2: High-Level Design
 
 ### 1. API Design
@@ -140,8 +138,6 @@ The system separates location-based searches from business-related operations. L
 
 
 
-
-# Chapter 16: Proximity Service
 
 ## Step 3: Algorithms for Fetching Nearby Businesses
 
@@ -344,3 +340,66 @@ Geohash, Quadtree, and Google S2 are different approaches to solving this proble
 
 - **Geohash:** Suitable for simple implementation and fixed-radius searches.
 - **Quadtree:** Useful for dynamic geographic partitioning and K-nearest searches.
+
+
+
+## Step 4: Scaling the Database and Caching Strategy
+
+### 1. Scaling the Business Table
+
+- Sharding by **Business ID** ensures even data distribution across multiple database servers.
+- Each business has a separate row in the business table.
+- Sharding distributes storage and workload across multiple servers.
+
+**Example:**
+
+| Geohash | Business ID |
+|---|---|
+| 9q9hvu | 343 |
+| 9q9hvu | 347 |
+| 9q9hvu | 112 |
+
+Multiple businesses can belong to the same Geohash grid.
+
+### 2. Scaling the Geospatial Index
+
+- Sharding may not be necessary for the geospatial index table.
+- The entire index can fit on a single server in this design.
+- Read replicas are a better approach to handle high read traffic.
+- Read replicas distribute search requests and reduce the read load on the primary database.
+
+### 3. Cache Strategy
+
+#### Problem with GPS Coordinates as Cache Keys
+
+Using exact GPS coordinates as cache keys has several problems:
+
+- GPS coordinates are not always accurate.
+- User movement changes location coordinates.
+- Small coordinate changes can generate different cache keys.
+
+#### Better Approach: Geohash as Cache Key
+
+Use Geohash instead of exact GPS coordinates to group nearby locations into geographic grids.
+
+**Cache Structure:**
+
+| Cache Key | Cache Value |
+|---|---|
+| `geohash` | List of business IDs in that grid |
+| `business_id` | Business details (name, address, reviews, etc.) |
+
+#### Cache Workflow
+
+1. Receive user's latitude and longitude.
+2. Generate the corresponding Geohash.
+3. Use the Geohash as the cache key.
+4. If data exists in the cache, return the business IDs.
+5. If there is a cache miss, fetch data from the database and store it in the cache.
+
+### Key Takeaway
+
+- **Business Table:** Scale using sharding by Business ID.
+- **Geospatial Index:** Use read replicas if the index fits on a single server.
+- **Caching:** Use Geohash instead of exact GPS coordinates as the location-based cache key.
+- Cache business IDs by Geohash and business details by Business ID.
