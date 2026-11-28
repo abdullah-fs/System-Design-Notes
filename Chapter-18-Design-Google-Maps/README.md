@@ -162,3 +162,105 @@ The course estimates approximately 5 billion usage minutes per day based on 1 bi
 Batching GPS updates helps reduce request volume.
 
 **QPS (Queries Per Second):** The number of requests processed by a system per second.
+
+
+
+
+## Step 2: Propose High-Level Design and Get Buy-In
+
+The system consists of three main services:
+
+1. Location Service
+2. Navigation Service
+3. Map Rendering Service
+
+### 1. Location Service
+
+Responsible for recording user location updates.
+
+- Clients send location updates every `t` seconds.
+- Location data includes latitude, longitude, and timestamp.
+- Location streams can improve ETA, traffic detection, road closure detection, and user behavior analysis.
+
+#### Client-side Batching
+
+Instead of sending every GPS update separately, clients batch multiple updates into a single request.
+
+Benefits:
+- Reduces request overhead.
+- Saves network bandwidth.
+- Reduces mobile data usage.
+
+Example request:
+
+`POST /v1/locations`
+
+Payload contains an array of:
+`(latitude, longitude, timestamp)`
+
+#### Backend Components
+
+- **Cassandra:** Stores high-volume location updates using a write-optimized database.
+- **Kafka:** Streams location events for analytics and further processing.
+
+Example: Location updates from many users can help detect traffic congestion on a road.
+
+### 2. Navigation Service
+
+Calculates routes between an origin and destination with reasonable latency and high accuracy.
+
+Example request:
+
+`GET /v1/nav?origin=Peshawar&destination=Islamabad`
+
+The response may contain:
+- Distance
+- Estimated duration (ETA)
+- Start and end locations
+- Navigation instructions
+- Encoded route polyline
+- Travel mode
+
+**Polyline:** An encoded sequence of geographic points used to draw the route on the map.
+
+Traffic changes and rerouting are handled in the deep dive section.
+
+### 3. Map Rendering Service
+
+The entire map dataset is too large to store on mobile clients.
+
+Therefore, map tiles are fetched on-demand based on:
+- User location
+- Zoom level
+- Visible map area
+
+Clients request new tiles while zooming or moving into a new area during navigation.
+
+#### Static Map Tiles
+
+Dynamically generating tiles creates high server load and makes caching difficult.
+
+A better approach is to:
+- Pre-generate map tiles.
+- Store and serve tiles statically.
+- Use geohash or tile coordinates to identify tiles.
+- Cache tiles on a CDN.
+
+#### CDN
+
+A Content Delivery Network (CDN) serves map tiles from nearby Point of Presence (POP) servers.
+
+Benefits:
+- Lower latency
+- Reduced origin server load
+- Better scalability
+- Efficient caching
+
+Example: A user in Peshawar can download map tiles from a nearby CDN location instead of a distant origin server.
+
+#### Tile URL Calculation
+
+Two approaches:
+
+1. **Client-side calculation:** The client calculates tile URLs. This avoids an extra API call, but changing the calculation logic later may require client updates.
+2. **Server-side calculation:** An API calculates tile URLs for the client. This allows server-side changes but requires an additional API request.
